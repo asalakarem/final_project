@@ -1,0 +1,238 @@
+import 'dart:io';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:untitled1/layout/cubit/cubit.dart';
+import 'package:untitled1/layout/cubit/states.dart';
+import 'package:untitled1/modules/user/home/request/camera/camera_screen.dart';
+import 'package:untitled1/modules/user/home/request/map/user_map.dart';
+import 'package:untitled1/shared/components/components.dart';
+
+class RequestScreen extends StatelessWidget {
+
+  final addressController = TextEditingController();
+
+   RequestScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MainCubit, MainStates>(
+      builder: (BuildContext context, MainStates state) {
+        var cubit = MainCubit.get(context);
+        return Scaffold(
+          appBar: defaultAppBar(
+            context: context,
+            backgroundColor: const Color(0xffF2EFEA),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: InkWell(
+                          onTap: () {
+                            navigateTo(context, const CameraScreen());
+                          },
+                          child: Container(
+                            height: 150.0,
+                            width: 150.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              image:
+                                  cubit.capturedImage != null
+                                      ? DecorationImage(
+                                        image: FileImage(
+                                          File(cubit.capturedImage!.path),
+                                        ),
+                                        fit: BoxFit.cover,
+                                      )
+                                      : const DecorationImage(
+                                        image: AssetImage(
+                                          'assets/images/pic_profile.jpg',
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                            ),
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          spacing: 15.0,
+                          children: [
+                            Neumorphic(
+                              style: NeumorphicStyle(
+                                depth: -5,
+                                intensity: 0.8,
+                                color: const Color(0xffE7E8D8),
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                  BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: 'User Name',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xff6C2C2C),
+                                    fontSize: 20.0,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Neumorphic(
+                              style: NeumorphicStyle(
+                                depth: -5,
+                                intensity: 0.8,
+                                color: const Color(0xffE7E8D8),
+                                boxShape: NeumorphicBoxShape.roundRect(
+                                  BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  hintText: 'Phone Number',
+                                  hintStyle: TextStyle(
+                                    color: Color(0xff6C2C2C),
+                                    fontSize: 20.0,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: -5,
+                      intensity: 0.8,
+                      color: const Color(0xffE7E8D8),
+                      boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: TextFormField(
+                      controller: addressController,
+                      onTap: () {
+                        navigateTo(context, UserMap(addressController: addressController,));
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Address',
+                        hintStyle: TextStyle(
+                          color: Color(0xff6C2C2C),
+                          fontSize: 20.0,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Neumorphic(
+                    style: NeumorphicStyle(
+                      depth: -5,
+                      intensity: 0.8,
+                      color: const Color(0xffE7E8D8),
+                      boxShape: NeumorphicBoxShape.roundRect(
+                        BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Dogs Number',
+                        hintStyle: TextStyle(
+                          color: Color(0xff6C2C2C),
+                          fontSize: 20.0,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text(
+                    '**The number of dogs is an estimate and may not reflect the exact count.**',
+                    style: TextStyle(color: Color(0xff635C5C), fontSize: 14.0),
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Neumorphic(
+                      style: NeumorphicStyle(
+                        depth: -5,
+                        intensity: 0.8,
+                        color: const Color(0xffE7E8D8),
+                        boxShape: NeumorphicBoxShape.roundRect(
+                          BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: TextFormField(
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          hintText: 'Add notes',
+                          hintStyle: TextStyle(
+                            color: Color(0xff6C2C2C),
+                            fontSize: 20.0,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 50.0),
+                defaultButton(
+                  function: () {},
+                  text: 'Request',
+                  backgroundColor: const Color(
+                    0xffAF6B58,
+                  ).withValues(alpha: 0.92),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

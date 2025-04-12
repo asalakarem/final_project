@@ -1,0 +1,196 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:untitled1/layout/cubit/cubit.dart';
+import 'package:untitled1/layout/cubit/states.dart';
+import 'package:untitled1/shared/components/components.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+class MadScreen extends StatelessWidget {
+  const MadScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<MainCubit, MainStates>(
+      listener: (BuildContext context, MainStates state) {},
+      builder: (BuildContext context, MainStates state) {
+        var cubit = MainCubit.get(context);
+        return Scaffold(
+          appBar: defaultAppBar(
+            context: context,
+            backgroundColor: const Color(0xffF2EFEA),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 190.0,
+                  child: Stack(
+                    alignment: AlignmentDirectional.bottomStart,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Container(
+                          width: double.infinity,
+                          height: 110.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: const Color(0xff815B5B),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.only(end: 25.0),
+                            child: Align(
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: Text(
+                                'What to you do if a mad\ndog bites you?',
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.alata(
+                                  fontSize: 20.0,
+                                  color: const Color(0xffDED5C4),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Image.asset('assets/images/mad_dog2.png', height: 150.0,width: 150.0,),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'If a rabid dog (a dog suspected of having rabies) bites you, it is considered a medical emergency.',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xff6C2C2C),
+                          ),
+                        ),
+                        const SizedBox(height: 30.0),
+                        Text(
+                          'Here’s what to do:',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xff526344),
+                          ),
+                        ),
+                        const SizedBox(height: 30.0),
+                        Text(
+                          '1. Immediate First Aid:',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xff6C2C2C),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 20.0,
+                            end: 20.0,
+                          ),
+                          child: Text(
+                            '* Wash the wound thoroughly with soap and water for at least 15 minutes to reduce the virus\'s presence. \n\n * Use an antiseptic or disinfectant to clean the area.',
+                            style: GoogleFonts.alata(
+                              fontSize: 22.0,
+                              color: const Color(0xff6C2C2C),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30.0),
+                        Text(
+                          '2. Seek Medical Attention:',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xffb5c18e),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 20.0,
+                            end: 20.0,
+                          ),
+                          child: Text(
+                            '* Go to a healthcare facility immediately.\n\n * Inform the medical professional that you were bitten by a dog suspected of rabies.',
+                            style: GoogleFonts.alata(
+                              fontSize: 22.0,
+                              color: const Color(0xffb5c18e),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30.0),
+                        Text(
+                          '3. Post-Exposure Prophylaxis (PEP):',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xffeaa989),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 20.0,
+                            end: 20.0,
+                          ),
+                          child: Text(
+                            '* The doctor will likely recommend a series of rabies vaccinations to prevent the virus from causing infection.\n\n * Depending on the severity of the bite and vaccination history, a rabies immune globulin (RIG) injection may also be administered.',
+                            style: GoogleFonts.alata(
+                              fontSize: 22.0,
+                              color: const Color(0xffeaa989),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30.0),
+                        Text(
+                          '4. Monitor for Symptoms:',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xff4c84a8),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                            start: 20.0,
+                            end: 20.0,
+                          ),
+                          child: Text(
+                            '* Early symptoms of rabies in humans include fever, headache, and fatigue, progressing to confusion, agitation, and neurological issues. Once symptoms appear, rabies is nearly always fatal.',
+                            style: GoogleFonts.alata(
+                              fontSize: 22.0,
+                              color: const Color(0xff4c84a8),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Key Takeaway: Immediate treatment is crucial to prevent rabies. Do not delay seeking help.',
+                          style: GoogleFonts.alata(
+                            fontSize: 24.0,
+                            color: const Color(0xff6c2c2c),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(20.0),
+                          child: YoutubePlayer(
+                            controller: cubit.youtubeController2,
+                            showVideoProgressIndicator: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

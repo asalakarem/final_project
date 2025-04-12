@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:untitled1/modules/org/login/org_login_screen.dart';
+import 'package:untitled1/modules/user/on_boarding/on_boarding_screen.dart';
+import 'package:untitled1/shared/components/components.dart';
+
+class SelectScreen extends StatelessWidget {
+  const SelectScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0.0,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Please select \n who are you',
+              style: GoogleFonts.aclonica(
+                fontSize: 40.0,
+                color: const Color(0xff6C2C2C),
+              ),
+            ),
+            const SizedBox(
+              height: 50.0,
+            ),
+            defaultButton(
+              function: () {
+                navigateTo(context, const OnBoardingScreen());
+              },
+              text: 'user',
+              backgroundColor: const Color(0xffA5B68D),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            Text(
+              'or',
+              style: GoogleFonts.aclonica(
+                fontSize: 40.0,
+                color: const Color(0xff6C2C2C),
+              ),
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+            defaultButton(
+              function: () {
+                navigateTo(context, OrgLoginScreen());
+              },
+              text: 'Organization',
+              backgroundColor: const Color(0xffB8BB84),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
