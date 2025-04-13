@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
-import 'package:untitled1/modules/select/select_screen.dart';
-import 'package:untitled1/shared/components/components.dart';
-import 'package:untitled1/shared/network/local/cache_helper.dart';
 
 class OrgActivity extends StatelessWidget {
   const OrgActivity({super.key});
@@ -15,7 +12,7 @@ class OrgActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrgCubit, OrgStates>(
       builder: (BuildContext context, OrgStates state) {
-        var cubit = OrgCubit.get(context);
+        final cubit = OrgCubit.get(context);
         return Scaffold(
           appBar: AppBar(toolbarHeight: 0.0,),
           body: cubit.screens[cubit.currentIndex],

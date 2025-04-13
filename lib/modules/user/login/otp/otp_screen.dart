@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -117,12 +118,17 @@ class OtpScreen extends StatelessWidget {
                         const SizedBox(height: 40.0),
                         defaultButton(
                           function: () {
-                            String otpString = otpController1.text + otpController2.text + otpController3.text + otpController4.text;
+                            final String otpString = otpController1.text + otpController2.text + otpController3.text + otpController4.text;
                             if (otpString.length == 4) {
-                              int otp = int.tryParse(otpString) ?? 0;
+                              final int otp = int.tryParse(otpString) ?? 0;
                               MainCubit.get(context).verifyOtp(otp: otp, email: email);
                             } else {
-                              return "Please enter a valid OTP";
+                              MainCubit.get(context).snackBar(
+                                context: context,
+                                title: 'Invalid OTP',
+                                message: 'Please enter a valid 4-digit OTP',
+                                type: ContentType.warning,
+                              );
                             }
                           },
                           text: 'Reset Password...',
@@ -143,7 +149,7 @@ class OtpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOtpField(TextEditingController controller, FocusNode focusNode, FocusNode? nextFocusNode, context) {
+  Widget _buildOtpField(TextEditingController controller, FocusNode focusNode, FocusNode? nextFocusNode, BuildContext context) {
     return Expanded(
       child: SizedBox(
         height: 70.0,

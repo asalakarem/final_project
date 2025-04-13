@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,9 +24,17 @@ class SignupScreen extends StatelessWidget {
         if (state is MainRegisterSuccessState) {
           navigateAndFinish(context, LoginScreen());
         }
+        if (state is MainRegisterErrorState) {
+          MainCubit.get(context).snackBar(
+            context: context,
+            title: 'Register Failed',
+            message: state.error,
+            type: ContentType.failure,
+          );
+        }
       },
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(
@@ -318,8 +327,8 @@ class SignupScreen extends StatelessWidget {
                                     firstName: firstNameController.text,
                                     lastName: lastNameController.text,
                                     email: emailController.text,
-                                    password: int.parse(passwordController.text),
-                                    phone: phoneController.text,
+                                    password: passwordController.text,
+                                    phone: int.parse(phoneController.text),
                                   );
                                 }
                               },

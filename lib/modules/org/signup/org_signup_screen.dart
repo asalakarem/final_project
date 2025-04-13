@@ -1,13 +1,11 @@
 import 'package:auto_size_text_plus/auto_size_text_plus.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:untitled1/layout/cubit/cubit.dart';
-import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/modules/org/map/org_map_screen.dart';
-import 'package:untitled1/modules/user/login/login_screen.dart';
 import 'package:untitled1/shared/components/components.dart';
 
 class OrgSignupScreen extends StatelessWidget {
@@ -23,12 +21,17 @@ class OrgSignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<OrgCubit, OrgStates>(
       listener: (BuildContext context, OrgStates state) {
-        if (state is MainRegisterSuccessState) {
-          navigateAndFinish(context, LoginScreen());
+        if (state is OrgSignUpErrorState) {
+          OrgCubit.get(context).snackBar(
+            context: context,
+            title: 'Sign Up Failed',
+            message: state.error,
+            type: ContentType.failure,
+          );
         }
       },
       builder: (BuildContext context, OrgStates state) {
-        var cubit = OrgCubit.get(context);
+        final cubit = OrgCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(

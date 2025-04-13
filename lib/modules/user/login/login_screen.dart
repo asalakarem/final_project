@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,9 +33,17 @@ class LoginScreen extends StatelessWidget {
             });
           }
         }
+        if (state is MainLoginErrorState) {
+          MainCubit.get(context).snackBar(
+            context: context,
+            title: 'Login Failed',
+            message: 'Email or password is wrong',
+            type: ContentType.failure,
+          );
+        }
       },
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: AppBar(backgroundColor: const Color(0xff627254)),

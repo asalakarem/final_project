@@ -28,9 +28,12 @@ class MapScreen extends StatelessWidget {
         if (state is OrgSignUpSuccessState) {
           navigateAndFinish(context, OrgLoginScreen());
         }
+        if (state is OrgSignUpErrorState) {
+          Navigator.pop(context);
+        }
       },
       builder: (BuildContext context, OrgStates state) {
-        var cubit = OrgCubit.get(context);
+        final cubit = OrgCubit.get(context);
 
         if (state is OrgLoadingStates) {
           return const Scaffold(
@@ -38,7 +41,7 @@ class MapScreen extends StatelessWidget {
           );
         }
 
-        Set<Marker> markers = {};
+      final   Set<Marker> markers = {};
 
         if (cubit.position != null) {
           markers.add(
@@ -79,7 +82,7 @@ class MapScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: defaultButton(
                   function: () async {
-                    Address address = await cubit.reverseGeocoding(
+            final         Address address = await cubit.reverseGeocoding(
                       latitude: cubit.position!.latitude,
                       longitude: cubit.position!.longitude,
                     );

@@ -18,7 +18,7 @@ class RequestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainCubit, MainStates>(
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         return Scaffold(
           appBar: defaultAppBar(
             context: context,

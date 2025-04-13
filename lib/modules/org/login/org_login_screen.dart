@@ -1,10 +1,8 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:untitled1/layout/cubit/cubit.dart';
-import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/layout/org/org_activity.dart';
-import 'package:untitled1/layout/user/user_activity.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/modules/org/login/forget_password/org_forget_password_screen.dart';
@@ -35,9 +33,17 @@ class OrgLoginScreen extends StatelessWidget {
             });
           }
         }
+        if (state is OrgLoginErrorState) {
+          OrgCubit.get(context).snackBar(
+            context: context,
+            title: 'Login Failed',
+            message: 'Email or password is wrong',
+            type: ContentType.failure,
+          );
+        }
       },
       builder: (BuildContext context, OrgStates state) {
-        var cubit = OrgCubit.get(context);
+        final cubit = OrgCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(

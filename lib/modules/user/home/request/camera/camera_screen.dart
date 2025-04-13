@@ -12,7 +12,7 @@ class CameraScreen extends StatelessWidget {
     return BlocConsumer<MainCubit, MainStates>(
       listener: (BuildContext context, MainStates state) {},
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         if (cubit.cameraController == null ||
             !cubit.cameraController!.value.isInitialized) {
           cubit.initializeCamera();

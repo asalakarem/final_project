@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,16 +11,14 @@ import 'package:untitled1/modules/user/home/home_screen.dart';
 import 'package:untitled1/modules/user/inquiry/inquiry_screen.dart';
 import 'package:untitled1/modules/user/involved/involved_screen.dart';
 import 'package:untitled1/modules/user/user/user_screen.dart';
-import 'package:untitled1/shared/components/constants.dart';
 import 'package:untitled1/shared/network/endPoint.dart';
-import 'package:untitled1/shared/network/local/cache_helper.dart';
 import 'package:untitled1/shared/network/remote/dio_helper.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MainCubit extends Cubit<MainStates> {
   MainCubit() : super(MainInitialStates());
 
-  static MainCubit get(context) => BlocProvider.of(context);
+  static MainCubit get(BuildContext context) => BlocProvider.of(context);
 
   int currentIndex = 0;
 
@@ -95,7 +94,7 @@ class MainCubit extends Cubit<MainStates> {
     }
   }
 
-  Future<void> captureImage(context) async {
+  Future<void> captureImage(BuildContext context) async {
     if (cameraController != null && cameraController!.value.isInitialized) {
       try {
         capturedImage = await cameraController!.takePicture();
@@ -126,7 +125,7 @@ class MainCubit extends Cubit<MainStates> {
           );
           emit(MainGetUserDataSuccessState(loginModel!));
         })
-        .catchError((error) {
+        .catchError((dynamic error) {
           print(error.toString());
           emit(MainGetUserDataErrorState(error.toString()));
         });
@@ -138,7 +137,7 @@ class MainCubit extends Cubit<MainStates> {
           loginModel = UserModel.fromJson(value.data);
           emit(MainLoginSuccessState(loginModel!));
         })
-        .catchError((error) {
+        .catchError((dynamic error) {
           print(error.toString());
           emit(MainLoginErrorState(error.toString()));
         });
@@ -149,8 +148,8 @@ class MainCubit extends Cubit<MainStates> {
     required String firstName,
     required String lastName,
     required String email,
-    required int password,
-    required String phone,
+    required String password,
+    required int phone,
   }) {
     final String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
@@ -171,7 +170,7 @@ class MainCubit extends Cubit<MainStates> {
           loginModel = UserModel.fromJson(value.data);
           emit(MainRegisterSuccessState());
         })
-        .catchError((error) {
+        .catchError((dynamic error) {
           print(error.toString());
           emit(MainRegisterErrorState(error.toString()));
         });
@@ -184,7 +183,7 @@ class MainCubit extends Cubit<MainStates> {
           UserModel(email: email);
           emit(MainSendEmailSuccessState());
         })
-        .catchError((error) {
+        .catchError((dynamic error) {
           print(error.toString());
           emit(MainSendEmailErrorState(error.toString()));
         });
@@ -197,7 +196,7 @@ class MainCubit extends Cubit<MainStates> {
           UserModel(otp: otp);
           emit(MainVerifyOtpSuccessState());
         })
-        .catchError((error) {
+        .catchError((dynamic error) {
           print(error.toString());
           emit(MainVerifyOtpErrorState(error.toString()));
         });
@@ -213,7 +212,7 @@ class MainCubit extends Cubit<MainStates> {
           UserModel(email: email, password: password);
           emit(MainNewPasswordSuccessState());
         })
-        .catchError((error) {
+        .catchError((dynamic error) {
           print(error.toString());
           emit(MainNewPasswordErrorState(error.toString()));
         });
@@ -227,7 +226,7 @@ class MainCubit extends Cubit<MainStates> {
     required double longitude,
   }) async {
     final geoCode = GeoCode();
-    Address address = await geoCode.reverseGeocoding(
+    final Address address = await geoCode.reverseGeocoding(
       latitude: latitude,
       longitude: longitude,
     );
@@ -261,5 +260,25 @@ class MainCubit extends Cubit<MainStates> {
     position = await Geolocator.getCurrentPosition();
     emit(MainLocationSuccessState());
     return position!;
+  }
+
+  void snackBar({
+    required BuildContext context,
+    required String title,
+    required String message,
+    required ContentType type,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: type,
+        ),
+      ),
+    );
   }
 }

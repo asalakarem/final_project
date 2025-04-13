@@ -22,7 +22,7 @@ class ForgetPasswordScreen extends StatelessWidget {
         }
       },
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(

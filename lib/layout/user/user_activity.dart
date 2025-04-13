@@ -13,7 +13,7 @@ class UserActivity extends StatelessWidget {
     return BlocConsumer<MainCubit, MainStates>(
       listener: (BuildContext context, MainStates state) {},
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         return Scaffold(
           appBar: AppBar(toolbarHeight: 0.0,),
           body: cubit.screens[cubit.currentIndex],

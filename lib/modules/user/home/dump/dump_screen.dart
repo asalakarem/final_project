@@ -15,7 +15,7 @@ class DumpScreen extends StatelessWidget {
     return BlocConsumer<MainCubit, MainStates>(
       listener: (BuildContext context, MainStates state) {},
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         return Scaffold(
           appBar: defaultAppBar(
             context: context,

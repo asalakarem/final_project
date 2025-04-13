@@ -8,7 +8,6 @@ import 'package:untitled1/layout/user/user_activity.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/select/select_screen.dart';
 import 'package:untitled1/modules/user/login/login_screen.dart';
-import 'package:untitled1/shared/components/constants.dart';
 import 'package:untitled1/shared/network/remote/dio_helper.dart';
 import 'package:untitled1/shared/style/theme.dart';
 
@@ -22,9 +21,9 @@ void main() async {
   DioHelper.init();
   Bloc.observer = MyBlocObserver();
   Widget startWidget;
-  bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
-  int? userId = CacheHelper.getData(key: 'userId');
-  int? orgId = CacheHelper.getData(key: 'orgId');
+  final bool? onBoarding = CacheHelper.getData(key: 'onBoarding');
+  final int? userId = CacheHelper.getData(key: 'userId');
+  final int? orgId = CacheHelper.getData(key: 'orgId');
   if (orgId != null) {
     startWidget = const OrgActivity();
   } else {
@@ -60,7 +59,7 @@ class MyApp extends StatelessWidget {
       child: BlocConsumer<MainCubit, MainStates>(
         listener: (BuildContext context, MainStates state) {},
         builder: (BuildContext context, MainStates state) {
-          MaterialTheme theme = MaterialTheme();
+          final MaterialTheme theme = MaterialTheme();
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: startWidget,

@@ -19,7 +19,7 @@ class OrgProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrgCubit, OrgStates>(
       builder: (BuildContext context, OrgStates state) {
-        var cubit = OrgCubit.get(context);
+        final cubit = OrgCubit.get(context);
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -125,7 +125,7 @@ class OrgProfileScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        showDialog(
+                        showDialog<void>(
                           context: context,
                           builder: (context) {
                             return AlertDialog(

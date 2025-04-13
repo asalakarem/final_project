@@ -20,7 +20,7 @@ class UserScreen extends StatelessWidget {
     return BlocConsumer<MainCubit,MainStates>(
       listener: (BuildContext context, MainStates state) {},
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
         // nameController.text =
         //     '${cubit.loginModel!.firstName ?? ''} ${cubit.loginModel!.lastName ?? ''}'.trim();
         // emailController.text = cubit.loginModel!.email!;
@@ -129,7 +129,7 @@ class UserScreen extends StatelessWidget {
                         Expanded(
                           child: TextButton(
                             onPressed: () {
-                              showDialog(
+                              showDialog<void>(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(

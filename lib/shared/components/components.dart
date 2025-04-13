@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Widget defaultButton({
-  required Function()? function,
+  required void Function()? function,
   required String text,
   required Color? backgroundColor,
   Color foregroundColor = Colors.white,
@@ -57,9 +57,7 @@ PreferredSizeWidget? defaultAppBar({
     ),
   ),
   titleSpacing: 5.0,
-  title: Text(
-    label ?? '',
-  ),
+  title: Text(label ?? ''),
   actions: actions,
 );
 
@@ -88,33 +86,27 @@ Widget defaultFormField({
   ),
 );
 
-Widget myDivider({
-  required Color? color
-}) => Padding(
+Widget myDivider({required Color? color}) => Padding(
   padding: const EdgeInsetsDirectional.only(start: 20.0),
-  child: Container(
-    width: double.infinity,
-    height: 1.0,
-    color: color,
-  ),
+  child: Container(width: double.infinity, height: 1.0, color: color),
 );
 
-void navigateTo(context, widget) =>
-    Navigator.push(context, MaterialPageRoute(builder: (context) => widget));
-
-void navigateAndFinish(context, widget) => Navigator.pushAndRemoveUntil(
+void navigateTo(BuildContext context, Widget widget) => Navigator.push(
   context,
-  MaterialPageRoute(builder: (context) => widget),
-  (route) {
-    return false;
-  },
+  MaterialPageRoute<Widget>(builder: (context) => widget),
 );
+
+void navigateAndFinish(BuildContext context, Widget widget) =>
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute<Widget>(builder: (context) => widget),
+      (route) {
+        return false;
+      },
+    );
 
 Future<void> launchInBrowser(Uri url) async {
-  if (!await launchUrl(
-    url,
-    mode: LaunchMode.externalApplication,
-  )) {
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
     throw Exception('Could not launch $url');
   }
 }

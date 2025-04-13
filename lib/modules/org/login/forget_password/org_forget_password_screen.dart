@@ -22,7 +22,7 @@ class OrgForgetPasswordScreen extends StatelessWidget {
         }
       },
       builder: (BuildContext context, OrgStates state) {
-        var cubit = OrgCubit.get(context);
+        final cubit = OrgCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(

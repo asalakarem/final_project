@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocode/geocode.dart';
@@ -15,7 +16,7 @@ import 'package:untitled1/shared/network/remote/dio_helper.dart';
 class OrgCubit extends Cubit<OrgStates> {
   OrgCubit() : super(OrgInitialStates());
 
-  static OrgCubit get(context) => BlocProvider.of(context);
+  static OrgCubit get(BuildContext context) => BlocProvider.of(context);
 
   List<Widget> screens = [
     const OrgHome(),
@@ -46,7 +47,7 @@ class OrgCubit extends Cubit<OrgStates> {
 
   Future<Address> reverseGeocoding({required double latitude, required double longitude}) async {
     final geoCode = GeoCode();
-    Address address = await geoCode.reverseGeocoding(
+    final Address address = await geoCode.reverseGeocoding(
       latitude: latitude,
       longitude: longitude,
     );
@@ -90,7 +91,7 @@ class OrgCubit extends Cubit<OrgStates> {
     DioHelper.getData(url: ORGLOGIN, query: {'email': email, 'password': password}).then((value){
       loginModel = OrgModel.fromJson(value.data);
       emit(OrgLoginSuccessState(loginModel!));
-    }).catchError((error){
+    }).catchError((dynamic error){
       emit(OrgLoginErrorState(error.toString()));
     });
   }
@@ -120,7 +121,7 @@ class OrgCubit extends Cubit<OrgStates> {
     }).then((value){
       loginModel = OrgModel.fromJson(value.data);
       emit(OrgSignUpSuccessState());
-    }).catchError((error){
+    }).catchError((dynamic error){
       print(error.toString());
       emit(OrgSignUpErrorState(error.toString()));
     });
@@ -131,7 +132,7 @@ class OrgCubit extends Cubit<OrgStates> {
     DioHelper.postData(url: ORG_SEND_EMAIL, query: {'toEmail': email}).then((value){
       OrgModel(email: email);
       emit(OrgForgetPasswordSuccessState());
-    }).catchError((error){
+    }).catchError((dynamic error){
       print(error.toString());
       emit(OrgForgetPasswordErrorState(error.toString()));
     });
@@ -142,7 +143,7 @@ class OrgCubit extends Cubit<OrgStates> {
     DioHelper.getData(url: ORG_VERIFY_OTP, query: {'otp': otp, 'email': email}).then((value){
       OrgModel(otp: otp, email: email);
       emit(OrgVerifyOtpSuccessState());
-    }).catchError((error){
+    }).catchError((dynamic error){
       print(error.toString());
       emit(OrgVerifyOtpErrorState(error.toString()));
     });
@@ -153,9 +154,29 @@ class OrgCubit extends Cubit<OrgStates> {
     DioHelper.putData(url: ORG_NEW_PASSWORD, query: {'email': email, 'password': password}).then((value){
       OrgModel(email: email, password: password);
       emit(OrgChangePasswordSuccessState());
-    }).catchError((error){
+    }).catchError((dynamic error){
       print(error.toString());
       emit(OrgChangePasswordErrorState(error.toString()));
     });
+  }
+
+  void snackBar({
+    required BuildContext context,
+    required String title,
+    required String message,
+    required ContentType type,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: type,
+        ),
+      ),
+    );
   }
 }

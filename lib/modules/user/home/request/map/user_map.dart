@@ -4,7 +4,6 @@ import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:untitled1/layout/cubit/cubit.dart';
 import 'package:untitled1/layout/cubit/states.dart';
-import 'package:untitled1/modules/user/home/request/request_screen.dart';
 import 'package:untitled1/shared/components/components.dart';
 
 class UserMap extends StatelessWidget {
@@ -16,7 +15,7 @@ class UserMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainCubit, MainStates>(
       builder: (BuildContext context, MainStates state) {
-        var cubit = MainCubit.get(context);
+        final cubit = MainCubit.get(context);
 
         if (state is MainLoadingMapStates) {
           return const Scaffold(
@@ -24,7 +23,7 @@ class UserMap extends StatelessWidget {
           );
         }
 
-        Set<Marker> markers = {};
+        final Set<Marker> markers = {};
 
         if (cubit.position != null) {
           markers.add(
@@ -64,7 +63,7 @@ class UserMap extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: defaultButton(
                   function: () async {
-                    Address address = await cubit.reverseGeocoding(
+                    final Address address = await cubit.reverseGeocoding(
                       latitude: cubit.position!.latitude,
                       longitude: cubit.position!.longitude,
                     );
