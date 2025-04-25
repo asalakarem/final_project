@@ -35,13 +35,15 @@ void main() async {
       startWidget = LoginScreen();
     }
   }
-  runApp(MyApp(startWidget: startWidget));
+  runApp(MyApp(startWidget: startWidget, userId: userId, orgId: orgId));
 }
 
 class MyApp extends StatelessWidget {
   final Widget? startWidget;
+  final int? userId;
+  final int? orgId;
 
-  const MyApp({super.key, required this.startWidget});
+  const MyApp({super.key, required this.startWidget, required this.userId, required this.orgId});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,9 @@ class MyApp extends StatelessWidget {
               (context) =>
                   MainCubit()
                     ..initYoutubeController()
-                    ..getUserData(),
+                    ..getUserData(userId!),
         ),
-        BlocProvider(create: (context) => OrgCubit()),
+        BlocProvider(create: (context) => OrgCubit()..getOrgData(orgId!)),
       ],
       child: BlocConsumer<MainCubit, MainStates>(
         listener: (BuildContext context, MainStates state) {},

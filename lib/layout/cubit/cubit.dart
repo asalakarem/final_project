@@ -6,6 +6,9 @@ import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/layout/cubit/states.dart';
+import 'package:untitled1/models/inquiry/accepted_model.dart';
+import 'package:untitled1/models/inquiry/in_progress_model.dart';
+import 'package:untitled1/models/request/request_model.dart';
 import 'package:untitled1/models/user/user_model.dart';
 import 'package:untitled1/modules/user/home/home_screen.dart';
 import 'package:untitled1/modules/user/inquiry/inquiry_screen.dart';
@@ -114,20 +117,56 @@ class MainCubit extends Cubit<MainStates> {
   //login
   UserModel? loginModel;
 
-  void getUserData() {
+  void getUserData(int targetUserId) {
     DioHelper.getData(url: PROFILE)
         .then((value) {
-          UserModel(
-            firstName: value.data['firstName'],
-            lastName: value.data['lastName'],
-            email: value.data['email'],
-            phoneNumber: value.data['phoneNumber'],
+          final List<dynamic> data = value.data;
+          final userMap = data.firstWhere(
+            (user) => user['userId'] == targetUserId,
+            orElse: () => null,
           );
-          emit(MainGetUserDataSuccessState(loginModel!));
+          if (userMap != null) {
+            final user = UserModel.fromJson(userMap);
+            loginModel = user;
+            emit(MainGetUserDataSuccessState(user));
+          } else {
+            emit(
+              MainGetUserDataErrorState("User with ID $targetUserId not found"),
+            );
+          }
         })
         .catchError((dynamic error) {
           print(error.toString());
           emit(MainGetUserDataErrorState(error.toString()));
+        });
+  }
+
+  void updateUser({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required int phone,
+  }) {
+    DioHelper.putData(
+          url: UPDATE_PROFILE,
+          data: {
+            'userId': loginModel!.userId,
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'phoneNumber': phone,
+            'password': loginModel!.password,
+            'dateJoined': loginModel!.dateJoined,
+            'otp': loginModel!.otp,
+          },
+        )
+        .then((value) {
+          loginModel = UserModel.fromJson(value.data);
+          emit(MainUpdateUserSuccessState(loginModel!));
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(MainUpdateUserErrorState(error.toString()));
         });
   }
 
@@ -215,6 +254,125 @@ class MainCubit extends Cubit<MainStates> {
         .catchError((dynamic error) {
           print(error.toString());
           emit(MainNewPasswordErrorState(error.toString()));
+        });
+  }
+
+  //createRequest
+  RequestModel? requestModel;
+
+  void createRequest({
+    required double latitude,
+    required double longitude,
+    required String description,
+    required int dogCount,
+  }) {
+    final String formattedDate = DateFormat(
+      'yyyy-MM-dd HH:mm:ss',
+    ).format(DateTime.now());
+    DioHelper.postData(
+          url: CREATE_REQUEST,
+          data: {
+            'userId': loginModel!.userId,
+            'status': 'inProgress',
+            'latitude': latitude,
+            'longitude': longitude,
+            'submissionTime': formattedDate,
+            'description': description,
+            'dogImage': null,
+            'dogsCount': dogCount,
+          },
+        )
+        .then((value) {
+          requestModel = RequestModel.fromJson(value.data);
+          emit(MainCreateRequestSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(MainCreateRequestErrorState(error.toString()));
+        });
+  }
+
+  //InProgressRequests
+  final Map<String, bool> isCollapse = {
+    'inProgress': false,
+    'accepted': false,
+    'missionDone': false,
+  };
+
+  int currentIndexCollapse = 0;
+
+  void changeInProgress(int index, String key) {
+    if (currentIndexCollapse == index) {
+      isCollapse[key] = !isCollapse[key]!;
+    } else {
+      currentIndexCollapse = index;
+      isCollapse[key] = true;
+    }
+    emit(MainInProgressChangeState());
+  }
+
+  InProgressModel? inProgressModel;
+
+  List<InProgressModel> inProgressList = [];
+
+  void inProgressRequest() {
+    DioHelper.getData(url: GET_IN_PROGRESS)
+        .then((value) {
+          inProgressList = [];
+          final List<dynamic> data = value.data;
+
+          final userRequest = data.where(
+            (user) => user['userId'] == loginModel!.userId,
+          );
+
+          if (userRequest.isNotEmpty) {
+            for (var item in userRequest) {
+              final model = InProgressModel.fromJson(item);
+              inProgressList.add(model);
+            }
+            emit(MainInProgressRequestSuccessState());
+          } else {
+            emit(
+              MainInProgressRequestErrorState("No in-progress requests found"),
+            );
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(MainInProgressRequestErrorState(error.toString()));
+        });
+  }
+
+  //AcceptedRequests
+  AcceptedModel? acceptedModel;
+
+  List<AcceptedModel> acceptedList = [];
+
+  void acceptedRequest() {
+    DioHelper.getData(url: GET_ACCEPTED)
+        .then((value) {
+          acceptedList = [];
+          final List<dynamic> data = value.data;
+
+          final userRequest = data.where(
+            (user) => user['userId'] == loginModel!.userId,
+          );
+
+          if (userRequest.isNotEmpty) {
+            for (var item in userRequest) {
+              final model = AcceptedModel.fromJson(item);
+              acceptedList.add(model);
+            }
+            emit(MainAcceptedRequestSuccessState());
+          } else {
+            emit(
+              MainAcceptedRequestErrorState("No in-progress requests found"),
+            );
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(MainAcceptedRequestErrorState(error.toString()));
         });
   }
 

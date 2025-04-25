@@ -43,6 +43,18 @@ class MainRegisterErrorState extends MainStates {
   MainRegisterErrorState(this.error);
 }
 
+class MainUpdateUserSuccessState extends MainStates {
+  final UserModel loginModel;
+
+  MainUpdateUserSuccessState(this.loginModel);
+}
+
+class MainUpdateUserErrorState extends MainStates {
+  String error;
+
+  MainUpdateUserErrorState(this.error);
+}
+
 class MainGetUserDataSuccessState extends MainStates {
   final UserModel loginModel;
 
@@ -82,3 +94,29 @@ class MainNewPasswordErrorState extends MainStates {
 class MainLoadingMapStates extends MainStates {}
 
 class MainLocationSuccessState extends MainStates {}
+
+class MainCreateRequestSuccessState extends MainStates {}
+
+class MainCreateRequestErrorState extends MainStates {
+  String error;
+
+  MainCreateRequestErrorState(this.error);
+}
+
+class MainInProgressRequestSuccessState extends MainStates {}
+
+class MainInProgressRequestErrorState extends MainStates {
+  String error;
+
+  MainInProgressRequestErrorState(this.error);
+}
+
+class MainAcceptedRequestSuccessState extends MainStates {}
+
+class MainAcceptedRequestErrorState extends MainStates {
+  String error;
+
+  MainAcceptedRequestErrorState(this.error);
+}
+
+class MainInProgressChangeState extends MainStates {}

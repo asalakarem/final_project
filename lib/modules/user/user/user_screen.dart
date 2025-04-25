@@ -4,27 +4,29 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:untitled1/layout/cubit/cubit.dart';
 import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/modules/select/select_screen.dart';
+import 'package:untitled1/modules/user/user/edit_profile/edit_profile_screen.dart';
 import 'package:untitled1/shared/components/components.dart';
 import 'package:untitled1/shared/network/local/cache_helper.dart';
 
 class UserScreen extends StatelessWidget {
-
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   UserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MainCubit,MainStates>(
-      listener: (BuildContext context, MainStates state) {},
+    return BlocBuilder<MainCubit, MainStates>(
       builder: (BuildContext context, MainStates state) {
         final cubit = MainCubit.get(context);
-        // nameController.text =
-        //     '${cubit.loginModel!.firstName ?? ''} ${cubit.loginModel!.lastName ?? ''}'.trim();
-        // emailController.text = cubit.loginModel!.email!;
-        // phoneController.text = cubit.loginModel!.phoneNumber!;
+        final loginModel = cubit.loginModel;
+        nameController.text =
+            '${loginModel?.firstName ?? ''} ${loginModel?.lastName ?? ''}'
+                .trim();
+        emailController.text = loginModel?.email ?? '';
+        phoneController.text = loginModel?.phoneNumber?.toString() ?? '';
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -147,30 +149,43 @@ class UserScreen extends StatelessWidget {
                                     actions: [
                                       TextButton(
                                         style: TextButton.styleFrom(
-                                          backgroundColor: const Color(0xffB8BB84),
+                                          backgroundColor: const Color(
+                                            0xffB8BB84,
+                                          ),
                                           foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(5.0),
+                                            borderRadius: BorderRadius.circular(
+                                              5.0,
+                                            ),
                                           ),
                                         ),
                                         onPressed: () {
-                                          CacheHelper.removeData(key: 'userId').then((value){
-                                            navigateAndFinish(context, const SelectScreen());
+                                          CacheHelper.removeData(
+                                            key: 'userId',
+                                          ).then((value) {
+                                            navigateAndFinish(
+                                              context,
+                                              const SelectScreen(),
+                                            );
                                             cubit.currentIndex = 0;
                                           });
-                                          CacheHelper.removeData(key: 'onBoarding');
+                                          CacheHelper.removeData(
+                                            key: 'onBoarding',
+                                          );
                                           Navigator.of(context).pop();
                                         },
                                         child: const Text('yes'),
                                       ),
                                       TextButton(
                                         style: TextButton.styleFrom(
-                                          backgroundColor: const Color(0xffAF6B58),
+                                          backgroundColor: const Color(
+                                            0xffAF6B58,
+                                          ),
                                           foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(5.0),
+                                            borderRadius: BorderRadius.circular(
+                                              5.0,
+                                            ),
                                           ),
                                         ),
                                         child: const Text('cancel'),
@@ -201,7 +216,9 @@ class UserScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              navigateTo(context, EditProfileScreen());
+                            },
                             child: const Text(
                               'Edit Profile',
                               style: TextStyle(

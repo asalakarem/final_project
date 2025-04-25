@@ -20,6 +20,10 @@ class OrgProfileScreen extends StatelessWidget {
     return BlocBuilder<OrgCubit, OrgStates>(
       builder: (BuildContext context, OrgStates state) {
         final cubit = OrgCubit.get(context);
+        final profile = cubit.loginModel;
+        nameController.text = profile!.name!;
+        emailController.text = profile.email!;
+        phoneController.text = profile.phoneNumber!.toString();
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

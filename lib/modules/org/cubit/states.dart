@@ -55,3 +55,15 @@ class OrgChangePasswordErrorState extends OrgStates {
 
   OrgChangePasswordErrorState(this.error);
 }
+
+class MainGetOrgDataSuccessState extends OrgStates {
+  final OrgModel loginModel;
+
+  MainGetOrgDataSuccessState(this.loginModel);
+}
+
+class MainGetOrgDataErrorState extends OrgStates {
+  final String error;
+
+  MainGetOrgDataErrorState(this.error);
+}

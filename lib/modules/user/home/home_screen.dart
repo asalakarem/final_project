@@ -275,7 +275,7 @@ class HomeScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: InkWell(
         onTap: () {
-          launchInBrowser(Uri.parse(model.urlLink));
+          launchInBrowser(Uri.parse('${model.urlLink}'));
         },
         child: Container(
           padding: const EdgeInsets.all(12.0),
@@ -283,7 +283,7 @@ class HomeScreen extends StatelessWidget {
             shape: BoxShape.circle,
             color: Color(0xffDED5C4),
           ),
-          child: Image.asset(model.image, height: 32.0, width: 32.0),
+          child: Image.asset('${model.image}', height: 32.0, width: 32.0),
         ),
       ),
     );

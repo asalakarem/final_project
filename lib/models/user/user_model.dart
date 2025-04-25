@@ -4,7 +4,7 @@ class UserModel {
   String? lastName;
   String? email;
   String? password;
-  String? phoneNumber;
+  int? phoneNumber;
   String? dateJoined;
   int? otp;
 
@@ -25,7 +25,7 @@ class UserModel {
     lastName = json['lastName'];
     email = json['email'];
     password = json['password'];
-    phoneNumber = json['phoneNumber']?.toString();
+    phoneNumber = json['phoneNumber'];
     dateJoined = json['dateJoined']?.toString();
     otp = json['otp'] is String ? int.tryParse(json['otp']) : json['otp'];
   }

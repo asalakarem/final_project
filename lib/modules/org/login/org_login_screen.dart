@@ -201,23 +201,6 @@ class OrgLoginScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 30.0),
-                            Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(
-                                      'assets/images/google.png',
-                                      height: 24.0,
-                                      width: 24.0,
-                                      color: const Color(0xff627254),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 30.0),
                             defaultButton(
                               function: () {
                                 if (formKey.currentState!.validate()) {

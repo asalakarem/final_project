@@ -1,7 +1,7 @@
 class HomeModel
 {
-  final String image;
-  final String urlLink;
+  final String? image;
+  final String? urlLink;
 
   HomeModel({
     required this.image,

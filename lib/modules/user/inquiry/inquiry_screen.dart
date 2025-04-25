@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:untitled1/modules/user/inquiry/accepted/accepted_screen.dart';
+import 'package:untitled1/modules/user/inquiry/in_progress/in_progress_screen.dart';
 import 'package:untitled1/shared/components/components.dart';
 
 class InquiryScreen extends StatelessWidget {
@@ -40,7 +42,9 @@ class InquiryScreen extends StatelessWidget {
               spacing: 15.0,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    navigateTo(context, const InProgressScreen());
+                  },
                   child: SizedBox(
                     height: 170.0,
                     child: Stack(
@@ -79,7 +83,9 @@ class InquiryScreen extends StatelessWidget {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    navigateTo(context, const AcceptedScreen());
+                  },
                   child: SizedBox(
                     height: 170.0,
                     child: Stack(

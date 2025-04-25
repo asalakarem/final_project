@@ -45,7 +45,10 @@ class OrgCubit extends Cubit<OrgStates> {
 
   Position? position;
 
-  Future<Address> reverseGeocoding({required double latitude, required double longitude}) async {
+  Future<Address> reverseGeocoding({
+    required double latitude,
+    required double longitude,
+  }) async {
     final geoCode = GeoCode();
     final Address address = await geoCode.reverseGeocoding(
       latitude: latitude,
@@ -53,7 +56,6 @@ class OrgCubit extends Cubit<OrgStates> {
     );
     return address;
   }
-
 
   Future<Position> determinePosition() async {
     emit(OrgLoadingStates());
@@ -87,13 +89,42 @@ class OrgCubit extends Cubit<OrgStates> {
   //login and signUp
   OrgModel? loginModel;
 
+  void getOrgData(int targetUserId) {
+    DioHelper.getData(url: ORGPROFILE)
+        .then((value) {
+          final List<dynamic> data = value.data;
+          final userMap = data.firstWhere(
+            (user) => user['ngoId'] == targetUserId,
+            orElse: () => null,
+          );
+          if (userMap != null) {
+            final user = OrgModel.fromJson(userMap);
+            loginModel = user;
+            emit(MainGetOrgDataSuccessState(user));
+          } else {
+            emit(
+              MainGetOrgDataErrorState("User with ID $targetUserId not found"),
+            );
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(MainGetOrgDataErrorState(error.toString()));
+        });
+  }
+
   void orgLogin({required String email, required String password}) {
-    DioHelper.getData(url: ORGLOGIN, query: {'email': email, 'password': password}).then((value){
-      loginModel = OrgModel.fromJson(value.data);
-      emit(OrgLoginSuccessState(loginModel!));
-    }).catchError((dynamic error){
-      emit(OrgLoginErrorState(error.toString()));
-    });
+    DioHelper.getData(
+          url: ORGLOGIN,
+          query: {'email': email, 'password': password},
+        )
+        .then((value) {
+          loginModel = OrgModel.fromJson(value.data);
+          emit(OrgLoginSuccessState(loginModel!));
+        })
+        .catchError((dynamic error) {
+          emit(OrgLoginErrorState(error.toString()));
+        });
   }
 
   void signUp({
@@ -108,56 +139,70 @@ class OrgCubit extends Cubit<OrgStates> {
     final String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
     ).format(DateTime.now());
-    DioHelper.postData(url: ORGREGISTER, data: {
-      'name': name,
-      'email': email,
-      'password': password,
-      'phoneNumber': phone,
-      'dateJoined': formattedDate,
-      'latitude': latitude,
-      'longitude': longitude,
-      'address': address,
-      'otp': 8080,
-    }).then((value){
-      loginModel = OrgModel.fromJson(value.data);
-      emit(OrgSignUpSuccessState());
-    }).catchError((dynamic error){
-      print(error.toString());
-      emit(OrgSignUpErrorState(error.toString()));
-    });
+    DioHelper.postData(
+          url: ORGREGISTER,
+          data: {
+            'name': name,
+            'email': email,
+            'password': password,
+            'phoneNumber': phone,
+            'dateJoined': formattedDate,
+            'latitude': latitude,
+            'longitude': longitude,
+            'address': address,
+            'otp': 8080,
+          },
+        )
+        .then((value) {
+          loginModel = OrgModel.fromJson(value.data);
+          emit(OrgSignUpSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgSignUpErrorState(error.toString()));
+        });
   }
 
   //forgetPassword
   void forgetPassword({required String email}) {
-    DioHelper.postData(url: ORG_SEND_EMAIL, query: {'toEmail': email}).then((value){
-      OrgModel(email: email);
-      emit(OrgForgetPasswordSuccessState());
-    }).catchError((dynamic error){
-      print(error.toString());
-      emit(OrgForgetPasswordErrorState(error.toString()));
-    });
+    DioHelper.postData(url: ORG_SEND_EMAIL, query: {'toEmail': email})
+        .then((value) {
+          OrgModel(email: email);
+          emit(OrgForgetPasswordSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgForgetPasswordErrorState(error.toString()));
+        });
   }
 
   //otp
   void verifyOtp({required int otp, required String email}) {
-    DioHelper.getData(url: ORG_VERIFY_OTP, query: {'otp': otp, 'email': email}).then((value){
-      OrgModel(otp: otp, email: email);
-      emit(OrgVerifyOtpSuccessState());
-    }).catchError((dynamic error){
-      print(error.toString());
-      emit(OrgVerifyOtpErrorState(error.toString()));
-    });
+    DioHelper.getData(url: ORG_VERIFY_OTP, query: {'otp': otp, 'email': email})
+        .then((value) {
+          OrgModel(otp: otp, email: email);
+          emit(OrgVerifyOtpSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgVerifyOtpErrorState(error.toString()));
+        });
   }
 
   //changePassword
   void changePassword({required String email, required String password}) {
-    DioHelper.putData(url: ORG_NEW_PASSWORD, query: {'email': email, 'password': password}).then((value){
-      OrgModel(email: email, password: password);
-      emit(OrgChangePasswordSuccessState());
-    }).catchError((dynamic error){
-      print(error.toString());
-      emit(OrgChangePasswordErrorState(error.toString()));
-    });
+    DioHelper.putData(
+          url: ORG_NEW_PASSWORD,
+          query: {'email': email, 'password': password},
+        )
+        .then((value) {
+          OrgModel(email: email, password: password);
+          emit(OrgChangePasswordSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgChangePasswordErrorState(error.toString()));
+        });
   }
 
   void snackBar({
