@@ -43,7 +43,12 @@ class MyApp extends StatelessWidget {
   final int? userId;
   final int? orgId;
 
-  const MyApp({super.key, required this.startWidget, required this.userId, required this.orgId});
+  const MyApp({
+    super.key,
+    required this.startWidget,
+    required this.userId,
+    required this.orgId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +59,9 @@ class MyApp extends StatelessWidget {
               (context) =>
                   MainCubit()
                     ..initYoutubeController()
-                    ..getUserData(userId!),
+                    ..getUserData(userId ?? 0),
         ),
-        BlocProvider(create: (context) => OrgCubit()..getOrgData(orgId!)),
+        BlocProvider(create: (context) => OrgCubit()..getOrgData(orgId ?? 0)),
       ],
       child: BlocConsumer<MainCubit, MainStates>(
         listener: (BuildContext context, MainStates state) {},

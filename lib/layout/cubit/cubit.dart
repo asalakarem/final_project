@@ -6,8 +6,7 @@ import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/layout/cubit/states.dart';
-import 'package:untitled1/models/inquiry/accepted_model.dart';
-import 'package:untitled1/models/inquiry/in_progress_model.dart';
+import 'package:untitled1/models/inquiry/requests_model.dart';
 import 'package:untitled1/models/request/request_model.dart';
 import 'package:untitled1/models/user/user_model.dart';
 import 'package:untitled1/modules/user/home/home_screen.dart';
@@ -292,7 +291,7 @@ class MainCubit extends Cubit<MainStates> {
         });
   }
 
-  //InProgressRequests
+  //collapse
   final Map<String, bool> isCollapse = {
     'inProgress': false,
     'accepted': false,
@@ -311,9 +310,8 @@ class MainCubit extends Cubit<MainStates> {
     emit(MainInProgressChangeState());
   }
 
-  InProgressModel? inProgressModel;
-
-  List<InProgressModel> inProgressList = [];
+  //InProgressRequests
+  List<RequestsModel> inProgressList = [];
 
   void inProgressRequest() {
     DioHelper.getData(url: GET_IN_PROGRESS)
@@ -327,7 +325,7 @@ class MainCubit extends Cubit<MainStates> {
 
           if (userRequest.isNotEmpty) {
             for (var item in userRequest) {
-              final model = InProgressModel.fromJson(item);
+              final model = RequestsModel.fromJson(item);
               inProgressList.add(model);
             }
             emit(MainInProgressRequestSuccessState());
@@ -344,9 +342,7 @@ class MainCubit extends Cubit<MainStates> {
   }
 
   //AcceptedRequests
-  AcceptedModel? acceptedModel;
-
-  List<AcceptedModel> acceptedList = [];
+  List<RequestsModel> acceptedList = [];
 
   void acceptedRequest() {
     DioHelper.getData(url: GET_ACCEPTED)
@@ -360,7 +356,7 @@ class MainCubit extends Cubit<MainStates> {
 
           if (userRequest.isNotEmpty) {
             for (var item in userRequest) {
-              final model = AcceptedModel.fromJson(item);
+              final model = RequestsModel.fromJson(item);
               acceptedList.add(model);
             }
             emit(MainAcceptedRequestSuccessState());
@@ -373,6 +369,37 @@ class MainCubit extends Cubit<MainStates> {
         .catchError((dynamic error) {
           print(error.toString());
           emit(MainAcceptedRequestErrorState(error.toString()));
+        });
+  }
+
+  //DoneRequests
+  List<RequestsModel> doneList = [];
+
+  void doneRequest() {
+    DioHelper.getData(url: GET_DONE)
+        .then((value) {
+          doneList = [];
+          final List<dynamic> data = value.data;
+
+          final userRequest = data.where(
+            (user) => user['userId'] == loginModel!.userId,
+          );
+
+          if (userRequest.isNotEmpty) {
+            for (var item in userRequest) {
+              final model = RequestsModel.fromJson(item);
+              doneList.add(model);
+            }
+            emit(MainDoneRequestSuccessState());
+          } else {
+            emit(
+              MainDoneRequestErrorState("No in-progress requests found"),
+            );
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(MainDoneRequestErrorState(error.toString()));
         });
   }
 

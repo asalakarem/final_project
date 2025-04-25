@@ -23,6 +23,7 @@ class DumpScreen extends StatelessWidget {
           ),
           body: SingleChildScrollView(
             child: Column(
+              spacing: 20.0,
               children: [
                 SizedBox(
                   height: 150.0,
@@ -48,7 +49,6 @@ class DumpScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26.0),
                   child: Text(
@@ -59,7 +59,6 @@ class DumpScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26.0),
                   child: AutoSizeText(
@@ -70,7 +69,6 @@ class DumpScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20.0),
                 Container(
                   padding: const EdgeInsets.all(20.0),
                   child: YoutubePlayer(

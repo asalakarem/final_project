@@ -5,8 +5,8 @@ import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/models/inquiry/requests_model.dart';
 import 'package:untitled1/shared/components/components.dart';
 
-class InProgressScreen extends StatelessWidget {
-  const InProgressScreen({super.key});
+class MissionDoneScreen extends StatelessWidget {
+  const MissionDoneScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,36 +17,36 @@ class InProgressScreen extends StatelessWidget {
           appBar: defaultAppBar(
             context: context,
             backgroundColor: const Color(0xffF2EFEA),
-            label: 'In Progress',
+            label: 'Mission Done',
           ),
           body:
-              cubit.inProgressList.isEmpty
-                  ? const Center(child: Text('No in-progress requests found'))
-                  : ListView.builder(
-                    itemBuilder:
-                        (context, index) => buildInProgressItem(
-                          cubit.inProgressList[index],
-                          context,
-                          index,
-                        ),
-                    itemCount: cubit.inProgressList.length,
-                  ),
+          cubit.doneList.isEmpty
+              ? const Center(child: Text('No Mission Done requests found'))
+              : ListView.builder(
+            itemBuilder:
+                (context, index) => buildInProgressItem(
+              cubit.doneList[index],
+              context,
+              index,
+            ),
+            itemCount: cubit.doneList.length,
+          ),
         );
       },
-      bloc: MainCubit.get(context)..inProgressRequest(),
+      bloc: MainCubit.get(context)..doneRequest(),
     );
   }
 
   Widget buildInProgressItem(
-    RequestsModel model,
-    BuildContext context,
-    int index,
-  ) => Container(
+      RequestsModel model,
+      BuildContext context,
+      int index,
+      ) => Container(
     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     padding: const EdgeInsets.symmetric(horizontal: 16),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(14),
-      color: const Color(0xffC79E9E),
+      color: const Color(0xffB8BB84),
     ),
     child: Column(
       children: [
@@ -64,27 +64,27 @@ class InProgressScreen extends StatelessWidget {
             GestureDetector(
               onTap:
                   () => MainCubit.get(
-                    context,
-                  ).changeInProgress(index, 'inProgress'),
+                context,
+              ).changeInProgress(index, 'missionDone'),
               child: CircleAvatar(
                 radius: 15.0,
                 backgroundColor: const Color(0xff6C2C2C),
                 child:
-                    MainCubit.get(context).isCollapse['inProgress']! &&
-                            MainCubit.get(context).currentIndexCollapse == index
-                        ? const Icon(
-                          Icons.keyboard_arrow_up,
-                          color: Colors.white,
-                        )
-                        : const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.white,
-                        ),
+                MainCubit.get(context).isCollapse['missionDone']! &&
+                    MainCubit.get(context).currentIndexCollapse == index
+                    ? const Icon(
+                  Icons.keyboard_arrow_up,
+                  color: Colors.white,
+                )
+                    : const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                ),
               ),
             ),
           ],
         ),
-        if (MainCubit.get(context).isCollapse['inProgress']! &&
+        if (MainCubit.get(context).isCollapse['missionDone']! &&
             MainCubit.get(context).currentIndexCollapse == index) ...[
           const Divider(color: Colors.white,),
           Column(

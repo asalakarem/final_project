@@ -1,12 +1,12 @@
-class InProgressModel {
+class RequestsModel {
   final int? requestId;
   final String? status;
   final String? submissionTime;
 
-  InProgressModel({this.requestId, this.status, this.submissionTime});
+  RequestsModel({this.requestId, this.status, this.submissionTime});
 
-  factory InProgressModel.fromJson(Map<String, dynamic> json) {
-    return InProgressModel(
+  factory RequestsModel.fromJson(Map<String, dynamic> json) {
+    return RequestsModel(
       requestId: json['requestId'],
       status: json['status'],
       submissionTime: json['submissionTime'],

@@ -119,4 +119,12 @@ class MainAcceptedRequestErrorState extends MainStates {
   MainAcceptedRequestErrorState(this.error);
 }
 
+class MainDoneRequestSuccessState extends MainStates {}
+
+class MainDoneRequestErrorState extends MainStates {
+  String error;
+
+  MainDoneRequestErrorState(this.error);
+}
+
 class MainInProgressChangeState extends MainStates {}

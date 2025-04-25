@@ -18,6 +18,8 @@ const GET_IN_PROGRESS = 'requests/getallinprogressrequests';
 
 const GET_ACCEPTED = 'requests/getacceptedrequests';
 
+const GET_DONE = 'requests/getmissiondonerequests';
+
 const ORGLOGIN = 'ngos/login';
 
 const ORG_SEND_EMAIL= 'ngos/send-email';
