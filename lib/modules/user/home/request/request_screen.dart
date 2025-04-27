@@ -195,6 +195,7 @@ class RequestScreen extends StatelessWidget {
                         cubit.createRequest(
                           latitude: cubit.position!.latitude,
                           longitude: cubit.position!.longitude,
+                          streetAddress: addressController.text,
                           dogCount: int.parse(dogCountController.text),
                           description: descriptionController.text,
                         );

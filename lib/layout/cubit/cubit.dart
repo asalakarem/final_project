@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/models/inquiry/requests_model.dart';
-import 'package:untitled1/models/request/request_model.dart';
+import 'package:untitled1/models/request/create_request_model.dart';
 import 'package:untitled1/models/user/user_model.dart';
 import 'package:untitled1/modules/user/home/home_screen.dart';
 import 'package:untitled1/modules/user/inquiry/inquiry_screen.dart';
@@ -257,11 +257,12 @@ class MainCubit extends Cubit<MainStates> {
   }
 
   //createRequest
-  RequestModel? requestModel;
+  CreateRequestModel? requestModel;
 
   void createRequest({
     required double latitude,
     required double longitude,
+    required String streetAddress,
     required String description,
     required int dogCount,
   }) {
@@ -275,6 +276,7 @@ class MainCubit extends Cubit<MainStates> {
             'status': 'inProgress',
             'latitude': latitude,
             'longitude': longitude,
+            'streetAddress': streetAddress,
             'submissionTime': formattedDate,
             'description': description,
             'dogImage': null,
@@ -282,7 +284,7 @@ class MainCubit extends Cubit<MainStates> {
           },
         )
         .then((value) {
-          requestModel = RequestModel.fromJson(value.data);
+          requestModel = CreateRequestModel.fromJson(value.data);
           emit(MainCreateRequestSuccessState());
         })
         .catchError((dynamic error) {

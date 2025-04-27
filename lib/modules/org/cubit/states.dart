@@ -67,3 +67,39 @@ class MainGetOrgDataErrorState extends OrgStates {
 
   MainGetOrgDataErrorState(this.error);
 }
+
+class OrgGetRequestLoadingState extends OrgStates {}
+
+class OrgGetRequestSuccessState extends OrgStates {}
+
+class OrgGetRequestErrorState extends OrgStates {
+  final String error;
+
+  OrgGetRequestErrorState(this.error);
+}
+
+class OrgGetAcceptRequestSuccessState extends OrgStates {}
+
+class OrgGetAcceptRequestErrorState extends OrgStates {
+  final String error;
+
+  OrgGetAcceptRequestErrorState(this.error);
+}
+
+class OrgGetMissionDoneRequestSuccessState extends OrgStates {}
+
+class OrgGetMissionDoneRequestErrorState extends OrgStates {
+  final String error;
+
+  OrgGetMissionDoneRequestErrorState(this.error);
+}
+
+class OrgGetRequestInfoLoadingState extends OrgStates {}
+
+class OrgGetRequestInfoSuccessState extends OrgStates {}
+
+class OrgGetRequestInfoErrorState extends OrgStates {
+  final String error;
+
+  OrgGetRequestInfoErrorState(this.error);
+}

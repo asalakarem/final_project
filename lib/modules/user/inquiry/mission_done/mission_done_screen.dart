@@ -24,7 +24,7 @@ class MissionDoneScreen extends StatelessWidget {
               ? const Center(child: Text('No Mission Done requests found'))
               : ListView.builder(
             itemBuilder:
-                (context, index) => buildInProgressItem(
+                (context, index) => buildMissionDoneItem(
               cubit.doneList[index],
               context,
               index,
@@ -37,7 +37,7 @@ class MissionDoneScreen extends StatelessWidget {
     );
   }
 
-  Widget buildInProgressItem(
+  Widget buildMissionDoneItem(
       RequestsModel model,
       BuildContext context,
       int index,
@@ -90,9 +90,9 @@ class MissionDoneScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'Street Address:',
-                style: TextStyle(
+              Text(
+                'Street Address: ${model.streetAddress}',
+                style: const TextStyle(
                   color: Color(0xff6C2C2C),
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -107,7 +107,23 @@ class MissionDoneScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Requested in: ${model.submissionTime}',
+                'Mission Done By: ${model.missionDoneNgo}',
+                style: const TextStyle(
+                  color: Color(0xff6C2C2C),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Requested in: ${model.submissionTime?.substring(0, 10)}',
+                style: const TextStyle(
+                  color: Color(0xff6C2C2C),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Done in: ${model.missionDoneDate?.substring(0, 10)}',
                 style: const TextStyle(
                   color: Color(0xff6C2C2C),
                   fontSize: 20,

@@ -31,3 +31,11 @@ const ORG_NEW_PASSWORD= 'ngos/password';
 const ORGREGISTER = 'ngos/createngos';
 
 const ORGPROFILE = 'ngos/findallngos';
+
+const ORG_GET_REQUEST = 'ngoassignments/findallngoassignments';
+
+const ORG_GET_REQUEST_INFO = 'requests/getrequstinfo';
+
+const ORG_ACCEPT_REQUEST = 'ngoassignments/findallngoaccepted';
+
+const ORG_MISSION_DONE = 'ngoassignments/findallngomissiondone';

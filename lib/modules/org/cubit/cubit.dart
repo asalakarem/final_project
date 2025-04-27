@@ -5,6 +5,7 @@ import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/models/org/org_model.dart';
+import 'package:untitled1/models/org/org_request/org_request_model.dart';
 import 'package:untitled1/modules/org/complete/org_complete.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/modules/org/done/org_done.dart';
@@ -205,6 +206,7 @@ class OrgCubit extends Cubit<OrgStates> {
         });
   }
 
+  //snackBar
   void snackBar({
     required BuildContext context,
     required String title,
@@ -223,5 +225,107 @@ class OrgCubit extends Cubit<OrgStates> {
         ),
       ),
     );
+  }
+
+  //getRequest
+  OrgRequestModel? requestModel;
+
+  List<OrgRequestModel> requestList = [];
+
+  void getRequest() {
+    emit(OrgGetRequestLoadingState());
+    DioHelper.getData(url: ORG_GET_REQUEST)
+        .then((value) {
+          requestList = [];
+          final List<dynamic> data = value.data;
+          final userMap = data.where(
+            (user) =>
+                user['ngoId'] == loginModel!.ngoId &&
+                user['status'] == 'Assigned',
+          );
+          if (userMap.isNotEmpty) {
+            for (var item in userMap) {
+              final user = OrgRequestModel.fromJson(item);
+              requestList.add(user);
+            }
+            emit(OrgGetRequestSuccessState());
+          } else {
+            emit(OrgGetRequestErrorState("No requests found"));
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgGetRequestErrorState(error.toString()));
+        });
+  }
+
+  void getRequestInfo({required int? requestId}) {
+    emit(OrgGetRequestInfoLoadingState());
+    DioHelper.getData(
+          url: ORG_GET_REQUEST_INFO,
+          query: {'requestId': requestId},
+        )
+        .then((value) {
+          requestModel = OrgRequestModel.fromJson(value.data);
+          emit(OrgGetRequestInfoSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgGetRequestInfoErrorState(error.toString()));
+        });
+  }
+
+  //acceptRequest
+  List<OrgRequestModel> acceptRequestList = [];
+
+  void getAcceptRequest() {
+    DioHelper.getData(url: ORG_ACCEPT_REQUEST)
+        .then((value) {
+          acceptRequestList = [];
+          final List<dynamic> data = value.data;
+          final userMap = data.where(
+            (user) => user['ngoId'] == loginModel!.ngoId,
+          );
+          if (userMap.isNotEmpty) {
+            for (var item in userMap) {
+              final user = OrgRequestModel.fromJson(item);
+              acceptRequestList.add(user);
+            }
+            emit(OrgGetAcceptRequestSuccessState());
+          } else {
+            emit(OrgGetAcceptRequestErrorState("No requests found"));
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgGetAcceptRequestErrorState(error.toString()));
+        });
+  }
+
+  //getMissionDone
+  List<OrgRequestModel> missionDoneList = [];
+
+  void getMissionDone() {
+    DioHelper.getData(url: ORG_MISSION_DONE)
+        .then((value) {
+          missionDoneList = [];
+          final List<dynamic> data = value.data;
+          final userMap = data.where(
+            (user) => user['ngoId'] == loginModel!.ngoId,
+          );
+          if (userMap.isNotEmpty) {
+            for (var item in userMap) {
+              final user = OrgRequestModel.fromJson(item);
+              missionDoneList.add(user);
+            }
+            emit(OrgGetMissionDoneRequestSuccessState());
+          } else {
+            emit(OrgGetMissionDoneRequestErrorState("No requests found"));
+          }
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgGetMissionDoneRequestErrorState(error.toString()));
+        });
   }
 }

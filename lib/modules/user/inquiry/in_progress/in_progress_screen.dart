@@ -90,9 +90,9 @@ class InProgressScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                'Street Address:',
-                style: TextStyle(
+              Text(
+                'Street Address: ${model.streetAddress}',
+                style: const TextStyle(
                   color: Color(0xff6C2C2C),
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class InProgressScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Requested in: ${model.submissionTime}',
+                'Requested in: ${model.submissionTime?.substring(0, 10)}',
                 style: const TextStyle(
                   color: Color(0xff6C2C2C),
                   fontSize: 20,
