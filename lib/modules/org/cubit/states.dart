@@ -103,3 +103,19 @@ class OrgGetRequestInfoErrorState extends OrgStates {
 
   OrgGetRequestInfoErrorState(this.error);
 }
+
+class OrgAcceptRequestButtonSuccessState extends OrgStates {}
+
+class OrgAcceptRequestButtonErrorState extends OrgStates {
+  final String error;
+
+  OrgAcceptRequestButtonErrorState(this.error);
+}
+
+class OrgMissionDoneButtonSuccessState extends OrgStates {}
+
+class OrgMissionDoneButtonErrorState extends OrgStates {
+  final String error;
+
+  OrgMissionDoneButtonErrorState(this.error);
+}

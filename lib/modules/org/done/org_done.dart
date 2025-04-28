@@ -78,7 +78,7 @@ class OrgDone extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => navigateTo(context, RequestInfoScreen(requestId: model.requestId!,)),
+              onTap: () => navigateTo(context, RequestInfoScreen(requestId: model.requestId!, assignmentId: model.assignmentId!,)),
               child: const Text(
                 'Info',
                 style: TextStyle(

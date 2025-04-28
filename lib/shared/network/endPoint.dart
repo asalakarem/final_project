@@ -39,3 +39,7 @@ const ORG_GET_REQUEST_INFO = 'requests/getrequstinfo';
 const ORG_ACCEPT_REQUEST = 'ngoassignments/findallngoaccepted';
 
 const ORG_MISSION_DONE = 'ngoassignments/findallngomissiondone';
+
+const ORG_SEND_ACCEPT_REQUEST = 'ngoassignments/updateassignrequestngo';
+
+const ORG_SEND_MISSION_DONE_REQUEST = 'requestupdate/createRequestUpdate';

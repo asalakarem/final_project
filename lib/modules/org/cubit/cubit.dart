@@ -275,6 +275,59 @@ class OrgCubit extends Cubit<OrgStates> {
         });
   }
 
+  //acceptRequestButton
+  void acceptRequestButton({required int? assignmentId}) {
+    final String formattedDate = DateFormat(
+      'yyyy-MM-dd HH:mm:ss',
+    ).format(DateTime.now());
+    DioHelper.putData(
+          url: ORG_SEND_ACCEPT_REQUEST,
+          data: {
+            "assignmentId": assignmentId,
+            "status": "Accepted",
+            "assignedDate": formattedDate,
+            "responseDuration": 3,
+            "responseDate": null,
+            "responseExpiredDate": null,
+            "actionDuration": null,
+            "actionDate": null,
+            "notes": null,
+            "numberNeededExtraTime": 4,
+            "isActive": "0",
+          },
+        )
+        .then((value) {
+          getRequest();
+          emit(OrgAcceptRequestButtonSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgAcceptRequestButtonErrorState(error.toString()));
+        });
+  }
+
+  //missionDoneButton
+  void missionDoneButton({required int? assignmentId}) {
+    final String formattedDate = DateFormat(
+      'yyyy-MM-dd HH:mm:ss',
+    ).format(DateTime.now());
+    DioHelper.postData(
+      url: ORG_SEND_MISSION_DONE_REQUEST,
+      data: {
+        'assignmentId': assignmentId,
+        'status': 'Mission Done',
+        'transactionDate': formattedDate,
+        'notes': 'Mission Done',
+      },
+    ).then((value) {
+      getAcceptRequest();
+      emit(OrgMissionDoneButtonSuccessState());
+    }).catchError((dynamic error) {
+      print(error.toString());
+      emit(OrgMissionDoneButtonErrorState(error.toString()));
+    });
+  }
+
   //acceptRequest
   List<OrgRequestModel> acceptRequestList = [];
 

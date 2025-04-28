@@ -1,6 +1,7 @@
 class OrgRequestModel
 {
   final int? requestId;
+  final int? assignmentId;
   final String? userName;
   final int? phoneNumber;
   final int? dogsCount;
@@ -14,6 +15,7 @@ class OrgRequestModel
 
   OrgRequestModel({
     this.requestId,
+    this.assignmentId,
     this.userName,
     this.phoneNumber,
     this.dogsCount,
@@ -29,6 +31,7 @@ class OrgRequestModel
   factory OrgRequestModel.fromJson(Map<String, dynamic> json) {
     return OrgRequestModel(
       requestId: json['requestId'],
+      assignmentId: json['assignmentId'],
       userName: json['userName'],
       phoneNumber: json['phoneNumber'],
       dogsCount: json['dogsCount'],
@@ -45,6 +48,7 @@ class OrgRequestModel
   Map<String, dynamic> toMap() {
     return {
       'requestId': requestId,
+      'assignmentId': assignmentId,
       'userName': userName,
       'phoneNumber': phoneNumber,
       'dogsCount': dogsCount,

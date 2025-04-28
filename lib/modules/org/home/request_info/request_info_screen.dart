@@ -9,13 +9,18 @@ import 'package:url_launcher/url_launcher.dart';
 
 class RequestInfoScreen extends StatelessWidget {
   final int requestId;
+  final int assignmentId;
   final userNameController = TextEditingController();
   final phoneController = TextEditingController();
   final dogNumberController = TextEditingController();
   final streetAddressController = TextEditingController();
   final noteController = TextEditingController();
 
-  RequestInfoScreen({super.key, required this.requestId});
+  RequestInfoScreen({
+    super.key,
+    required this.requestId,
+    required this.assignmentId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -263,13 +268,17 @@ class RequestInfoScreen extends StatelessWidget {
                 const SizedBox(height: 20.0),
                 if (model.status == 'Inprogress')
                   defaultButton(
-                    function: () {},
+                    function: () {
+                      cubit.acceptRequestButton(assignmentId: assignmentId);
+                    },
                     text: 'Accept Request ...',
                     backgroundColor: const Color(0xffAF6B58),
                   ),
                 if (model.status == 'Accepted')
                   defaultButton(
-                    function: () {},
+                    function: () {
+                      cubit.missionDoneButton(assignmentId: assignmentId);
+                    },
                     text: 'Done',
                     foregroundColor: const Color(0xff6C2C2C),
                     backgroundColor: const Color(0xffE7E8D8),
