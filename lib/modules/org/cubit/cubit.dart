@@ -312,20 +312,22 @@ class OrgCubit extends Cubit<OrgStates> {
       'yyyy-MM-dd HH:mm:ss',
     ).format(DateTime.now());
     DioHelper.postData(
-      url: ORG_SEND_MISSION_DONE_REQUEST,
-      data: {
-        'assignmentId': assignmentId,
-        'status': 'Mission Done',
-        'transactionDate': formattedDate,
-        'notes': 'Mission Done',
-      },
-    ).then((value) {
-      getAcceptRequest();
-      emit(OrgMissionDoneButtonSuccessState());
-    }).catchError((dynamic error) {
-      print(error.toString());
-      emit(OrgMissionDoneButtonErrorState(error.toString()));
-    });
+          url: ORG_SEND_MISSION_DONE_REQUEST,
+          data: {
+            'assignmentId': assignmentId,
+            'status': 'Mission Done',
+            'transactionDate': formattedDate,
+            'notes': 'Mission Done',
+          },
+        )
+        .then((value) {
+          getAcceptRequest();
+          emit(OrgMissionDoneButtonSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgMissionDoneButtonErrorState(error.toString()));
+        });
   }
 
   //acceptRequest
@@ -355,6 +357,34 @@ class OrgCubit extends Cubit<OrgStates> {
         });
   }
 
+  //ExtraTime
+  void extraTimeButton({
+    required int? assignmentId,
+    required int? extraNeededDays,
+  }) {
+    final String formattedDate = DateFormat(
+      'yyyy-MM-dd HH:mm:ss',
+    ).format(DateTime.now());
+    DioHelper.postData(
+          url: ORG_CREATE_EXTRA_TIME,
+          data: {
+            'assignmentId': assignmentId,
+            'extraTimeRequestDate': formattedDate,
+            'extraNeededDays': extraNeededDays,
+            'extraTimeUpdatedDeadlineDays': formattedDate,
+            'extraTimeActionExpiredDate': formattedDate,
+          },
+        )
+        .then((value) {
+          getAcceptRequest();
+          emit(OrgExtraTimeButtonSuccessState());
+        })
+        .catchError((dynamic error) {
+          print(error.toString());
+          emit(OrgExtraTimeButtonErrorState(error.toString()));
+        });
+  }
+
   //getMissionDone
   List<OrgRequestModel> missionDoneList = [];
 
@@ -381,4 +411,14 @@ class OrgCubit extends Cubit<OrgStates> {
           emit(OrgGetMissionDoneRequestErrorState(error.toString()));
         });
   }
+
+  String? selectedTime;
+
+  List<DropdownMenuEntry<String>> extraTimeList = [
+    const DropdownMenuEntry(value: '1', label: '1'),
+    const DropdownMenuEntry(value: '2', label: '2'),
+    const DropdownMenuEntry(value: '3', label: '3'),
+    const DropdownMenuEntry(value: '4', label: '4'),
+    const DropdownMenuEntry(value: '5', label: '5'),
+  ];
 }

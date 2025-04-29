@@ -86,6 +86,14 @@ class OrgGetAcceptRequestErrorState extends OrgStates {
   OrgGetAcceptRequestErrorState(this.error);
 }
 
+class OrgExtraTimeButtonSuccessState extends OrgStates {}
+
+class OrgExtraTimeButtonErrorState extends OrgStates {
+  final String error;
+
+  OrgExtraTimeButtonErrorState(this.error);
+}
+
 class OrgGetMissionDoneRequestSuccessState extends OrgStates {}
 
 class OrgGetMissionDoneRequestErrorState extends OrgStates {

@@ -1,13 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:untitled1/layout/cubit/cubit.dart';
 import 'package:untitled1/layout/cubit/states.dart';
-import 'package:untitled1/modules/user/home/request/camera/camera_screen.dart';
 import 'package:untitled1/modules/user/home/request/map/user_map.dart';
 import 'package:untitled1/shared/components/components.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:image/image.dart' as img;
 
 class RequestScreen extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
@@ -38,6 +39,15 @@ class RequestScreen extends StatelessWidget {
             type: ContentType.failure,
           );
         }
+        if (state is MainDogImageRejectedState)
+        {
+          MainCubit.get(context).snackBar(
+            context: context,
+            title: 'Error',
+            message: 'This image is not dog',
+            type: ContentType.failure,
+          );
+        }
       },
       builder: (BuildContext context, MainStates state) {
         final cubit = MainCubit.get(context);
@@ -55,7 +65,7 @@ class RequestScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: InkWell(
                       onTap: () {
-                        navigateTo(context, const CameraScreen());
+                        cubit.pickImage(context);
                       },
                       child: Container(
                         height: 150.0,
@@ -190,15 +200,23 @@ class RequestScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 50.0),
                   defaultButton(
-                    function: () {
+                    function: () async {
                       if (formKey.currentState!.validate()) {
-                        cubit.createRequest(
-                          latitude: cubit.position!.latitude,
-                          longitude: cubit.position!.longitude,
-                          streetAddress: addressController.text,
-                          dogCount: int.parse(dogCountController.text),
-                          description: descriptionController.text,
-                        );
+                        if (cubit.capturedImage != null) {
+                          final originalBytes = await File(cubit.capturedImage!.path).readAsBytes();
+                          final decodedImage = img.decodeImage(originalBytes);
+                          final resized = img.copyResize(decodedImage!, width: 500);
+                          final compressedBytes = img.encodeJpg(resized, quality: 50);
+                          final base64Image = base64Encode(compressedBytes);
+                          cubit.createRequest(
+                            latitude: cubit.position!.latitude,
+                            longitude: cubit.position!.longitude,
+                            streetAddress: addressController.text,
+                            dogCount: int.parse(dogCountController.text),
+                            dogImage: base64Image,
+                            description: descriptionController.text,
+                          );
+                        }
                       }
                     },
                     text: 'Request',

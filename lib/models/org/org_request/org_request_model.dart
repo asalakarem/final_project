@@ -2,9 +2,11 @@ class OrgRequestModel
 {
   final int? requestId;
   final int? assignmentId;
-  final String? userName;
+  final int? numberExtraTimeUsed;
   final int? phoneNumber;
   final int? dogsCount;
+  final String? dogImage;
+  final String? userName;
   final String? streetAddress;
   final String? description;
   final double? latitude;
@@ -16,6 +18,8 @@ class OrgRequestModel
   OrgRequestModel({
     this.requestId,
     this.assignmentId,
+    this.numberExtraTimeUsed,
+    this.dogImage,
     this.userName,
     this.phoneNumber,
     this.dogsCount,
@@ -32,6 +36,8 @@ class OrgRequestModel
     return OrgRequestModel(
       requestId: json['requestId'],
       assignmentId: json['assignmentId'],
+      numberExtraTimeUsed: json['numberExtraTimeUsed'],
+      dogImage: json['dogImage'],
       userName: json['userName'],
       phoneNumber: json['phoneNumber'],
       dogsCount: json['dogsCount'],
@@ -49,6 +55,8 @@ class OrgRequestModel
     return {
       'requestId': requestId,
       'assignmentId': assignmentId,
+      'numberExtraTimeUsed': numberExtraTimeUsed,
+      'dogImage': dogImage,
       'userName': userName,
       'phoneNumber': phoneNumber,
       'dogsCount': dogsCount,

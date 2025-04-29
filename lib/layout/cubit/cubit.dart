@@ -1,9 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/models/inquiry/requests_model.dart';
@@ -76,41 +78,90 @@ class MainCubit extends Cubit<MainStates> {
   }
 
   //camera
-  CameraController? cameraController;
-  List<CameraDescription>? cameras;
+  final ImagePicker picker = ImagePicker();
+
   XFile? capturedImage;
 
-  Future<void> initializeCamera() async {
-    try {
-      cameras = await availableCameras();
-      if (cameras!.isNotEmpty) {
-        cameraController = CameraController(
-          cameras![0],
-          ResolutionPreset.veryHigh,
+  void pickImage(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('التقاط صورة'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? image = await picker.pickImage(source: ImageSource.camera);
+                  if (image != null) classifyImage(image);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('اختيار من المعرض'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) classifyImage(image);
+                },
+              ),
+            ],
+          ),
         );
-        await cameraController!.initialize();
-        emit(MainCameraInitializedState());
+      },
+    );
+  }
+
+  void updateCapturedImage(XFile image) {
+    capturedImage = image;
+    emit(MainCameraInitializedState());
+  }
+
+  late Dio dio = Dio();
+
+  void classifyImage(XFile image) async {
+    final fileName = image.name;
+
+    final FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+        contentType: MediaType('image', 'jpeg'),
+      ),
+    });
+    try {
+      final response = await dio.post(
+        'https://skinalayz-api.ashybeach-47c37bbd.southafricanorth.azurecontainerapps.io/classify_image/',
+        data: formData,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      final data = response.data;
+      final predictedClass = data['predicted_class'];
+      final status = data['status'];
+      final confidence = data['confidence'];
+      if (status == 'Accepted' && predictedClass == 'dog') {
+        print('✅ صورة كلب (${(confidence * 100).toStringAsFixed(2)}%)');
+        updateCapturedImage(image);
+        emit(MainDogImageAcceptedState(predictedClass, confidence));
+      } else {
+        print('❌ ليست صورة كلب (status: $status, class: $predictedClass)');
+        emit(MainDogImageRejectedState(predictedClass, confidence));
       }
     } catch (e) {
-      emit(MainCameraErrorState(e.toString()));
+      print('🚫 خطأ أثناء إرسال الصورة: $e');
+      emit(MainDogImageErrorState(e.toString()));
     }
-  }
-
-  Future<void> captureImage(BuildContext context) async {
-    if (cameraController != null && cameraController!.value.isInitialized) {
-      try {
-        capturedImage = await cameraController!.takePicture();
-        Navigator.pop(context);
-        emit(MainCameraCaptureState(capturedImage!.path));
-      } catch (e) {
-        emit(MainCameraErrorState(e.toString()));
-      }
-    }
-  }
-
-  void disposeCamera() {
-    cameraController?.dispose();
-    emit(MainCameraDisposedState());
   }
 
   //login
@@ -264,6 +315,7 @@ class MainCubit extends Cubit<MainStates> {
     required double longitude,
     required String streetAddress,
     required String description,
+    required String dogImage,
     required int dogCount,
   }) {
     final String formattedDate = DateFormat(
@@ -279,7 +331,7 @@ class MainCubit extends Cubit<MainStates> {
             'streetAddress': streetAddress,
             'submissionTime': formattedDate,
             'description': description,
-            'dogImage': null,
+            'dogImage': dogImage,
             'dogsCount': dogCount,
           },
         )
@@ -394,9 +446,7 @@ class MainCubit extends Cubit<MainStates> {
             }
             emit(MainDoneRequestSuccessState());
           } else {
-            emit(
-              MainDoneRequestErrorState("No in-progress requests found"),
-            );
+            emit(MainDoneRequestErrorState("No in-progress requests found"));
           }
         })
         .catchError((dynamic error) {

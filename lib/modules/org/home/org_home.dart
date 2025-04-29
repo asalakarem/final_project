@@ -82,7 +82,11 @@ class OrgHome extends StatelessWidget {
               onTap:
                   () => navigateTo(
                     context,
-                    RequestInfoScreen(requestId: model.requestId!, assignmentId: model.assignmentId!,),
+                    RequestInfoScreen(
+                      requestId: model.requestId!,
+                      assignmentId: model.assignmentId!,
+                      numberExtraTimeUsed: model.numberExtraTimeUsed!,
+                    ),
                   ),
               child: const Text(
                 'Info',

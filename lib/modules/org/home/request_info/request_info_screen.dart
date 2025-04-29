@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 class RequestInfoScreen extends StatelessWidget {
   final int requestId;
   final int assignmentId;
+  final int numberExtraTimeUsed;
   final userNameController = TextEditingController();
   final phoneController = TextEditingController();
   final dogNumberController = TextEditingController();
@@ -20,11 +23,40 @@ class RequestInfoScreen extends StatelessWidget {
     super.key,
     required this.requestId,
     required this.assignmentId,
+    required this.numberExtraTimeUsed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrgCubit, OrgStates>(
+    return BlocConsumer<OrgCubit, OrgStates>(
+      listener: (BuildContext context, OrgStates state) {
+        if (state is OrgAcceptRequestButtonSuccessState) {
+          OrgCubit.get(context).snackBar(
+            context: context,
+            title: 'Success',
+            message: 'Request Accepted Successfully',
+            type: ContentType.success,
+          );
+          Navigator.pop(context);
+        }
+        if (state is OrgMissionDoneButtonSuccessState) {
+          OrgCubit.get(context).snackBar(
+            context: context,
+            title: 'Success',
+            message: 'Request Done Successfully',
+            type: ContentType.success,
+          );
+          Navigator.pop(context);
+        }
+        if (state is OrgExtraTimeButtonSuccessState) {
+          OrgCubit.get(context).snackBar(
+            context: context,
+            title: 'Success',
+            message: 'Extra Time Added Successfully',
+            type: ContentType.success,
+          );
+        }
+      },
       bloc: OrgCubit.get(context)..getRequestInfo(requestId: requestId),
       builder: (BuildContext context, OrgStates state) {
         final cubit = OrgCubit.get(context);
@@ -71,8 +103,8 @@ class RequestInfoScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            'assets/images/pic_profile.jpg',
+                          child: Image.memory(
+                            base64Decode(model.dogImage!),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -265,24 +297,84 @@ class RequestInfoScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                if (model.status == 'Inprogress')
+                if (model.status == 'Inprogress') ...[
+                  const SizedBox(height: 20.0),
                   defaultButton(
                     function: () {
                       cubit.acceptRequestButton(assignmentId: assignmentId);
                     },
+                    height: 45.0,
+                    fontSize: 28.0,
                     text: 'Accept Request ...',
                     backgroundColor: const Color(0xffAF6B58),
                   ),
-                if (model.status == 'Accepted')
+                ],
+                if (model.status == 'Accepted') ...[
+                  if (numberExtraTimeUsed != 2) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 17.0,
+                        vertical: 10.0,
+                      ),
+                      child: DropdownMenu<String>(
+                        width: double.infinity,
+                        label: const Text(
+                          'Need more time?',
+                          style: TextStyle(
+                            color: Color(0xFF795548),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        textStyle: const TextStyle(color: Color(0xFF795548)),
+                        dropdownMenuEntries: cubit.extraTimeList,
+                        inputDecorationTheme: InputDecorationTheme(
+                          filled: true,
+                          fillColor: const Color(0xFFE7E8D8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffixIconColor: const Color(0xFF5D2B1A),
+                        ),
+                        onSelected: (String? value) {
+                          cubit.selectedTime = value;
+                        },
+                      ),
+                    ),
+                    defaultButton(
+                      function: () {
+                        if (cubit.selectedTime != null) {
+                          cubit.extraTimeButton(
+                            assignmentId: assignmentId,
+                            extraNeededDays: int.tryParse(cubit.selectedTime!),
+                          );
+                        } else {
+                          cubit.snackBar(
+                            context: context,
+                            title: 'Error',
+                            message: 'Please select time',
+                            type: ContentType.failure,
+                          );
+                        }
+                      },
+                      height: 45.0,
+                      fontSize: 28.0,
+                      text: 'Extend',
+                      foregroundColor: const Color(0xff6C2C2C),
+                      backgroundColor: const Color(0xffE7E8D8),
+                    ),
+                  ],
                   defaultButton(
                     function: () {
                       cubit.missionDoneButton(assignmentId: assignmentId);
                     },
+                    height: 45.0,
+                    fontSize: 28.0,
                     text: 'Done',
-                    foregroundColor: const Color(0xff6C2C2C),
-                    backgroundColor: const Color(0xffE7E8D8),
+                    foregroundColor: const Color(0xffEDDED9),
+                    backgroundColor: const Color(0xffAF6B58).withOpacity(0.92),
                   ),
+                ],
               ],
             ),
           ),

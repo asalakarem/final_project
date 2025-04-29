@@ -11,17 +11,25 @@ class MainChangePasswordVisibilityStates extends MainStates {}
 
 class MainCameraInitializedState extends MainStates {}
 
-class MainCameraErrorState extends MainStates {
-  String error;
-  MainCameraErrorState(this.error);
+class MainDogImageAcceptedState extends MainStates {
+  final String label;
+  final double confidence;
+
+  MainDogImageAcceptedState(this.label, this.confidence);
 }
 
-class MainCameraCaptureState extends MainStates {
-  String imagePath;
-  MainCameraCaptureState(this.imagePath);
+class MainDogImageRejectedState extends MainStates {
+  final String label;
+  final double confidence;
+
+  MainDogImageRejectedState(this.label, this.confidence);
 }
 
-class MainCameraDisposedState extends MainStates {}
+class MainDogImageErrorState extends MainStates {
+  final String message;
+
+  MainDogImageErrorState(this.message);
+}
 
 class MainLoginSuccessState extends MainStates {
   final UserModel loginModel;
