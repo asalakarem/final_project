@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
@@ -23,28 +22,33 @@ class MapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OrgCubit, OrgStates>(
-      listener: (BuildContext context, OrgStates state) {
-        if (state is OrgSignUpSuccessState) {
-          navigateAndFinish(context, OrgLoginScreen());
-        }
-        if (state is OrgSignUpErrorState) {
-          Navigator.pop(context);
-        }
-      },
-      builder: (BuildContext context, OrgStates state) {
-        final cubit = OrgCubit.get(context);
+    return BlocProvider.value(
+      value: OrgCubit.get(context)..determinePosition(),
+      child: BlocConsumer<OrgCubit, OrgStates>(
+        listener: (BuildContext context, OrgStates state) {
+          if (state is OrgSignUpSuccessState) {
+            navigateAndFinish(context, OrgLoginScreen());
+          }
+          if (state is OrgSignUpErrorState) {
+            Navigator.pop(context);
+          }
+        },
+        builder: (BuildContext context, OrgStates state) {
+          final cubit = OrgCubit.get(context);
 
-        if (state is OrgLoadingStates) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+          if (state is OrgLoadingStates) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-      final   Set<Marker> markers = {};
+          if (cubit.position == null) {
+            return const Scaffold(
+              body: Center(child: Text("تعذر الحصول على الموقع الحالي")),
+            );
+          }
 
-        if (cubit.position != null) {
-          markers.add(
+          final markers = {
             Marker(
               markerId: const MarkerId('current_location'),
               position: LatLng(
@@ -53,62 +57,72 @@ class MapScreen extends StatelessWidget {
               ),
               infoWindow: const InfoWindow(title: 'موقعي الحالي'),
             ),
-          );
-        }
+          };
 
-        return SafeArea(
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              GoogleMap(
-                mapType: MapType.hybrid,
-                initialCameraPosition:
-                    cubit.position != null
-                        ? CameraPosition(
-                          target: LatLng(
-                            cubit.position!.latitude,
-                            cubit.position!.longitude,
-                          ),
-                          zoom: 16,
-                        )
-                        : const CameraPosition(
-                          target: LatLng(37.42796133580664, -122.085749655962),
-                          zoom: 14.4746,
-                        ),
-                markers: markers,
-                onMapCreated: (GoogleMapController controller) {},
+          return Scaffold(
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  GoogleMap(
+                    mapType: MapType.normal,
+                    myLocationEnabled: true,
+                    zoomControlsEnabled: false,
+                    compassEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        cubit.position!.latitude,
+                        cubit.position!.longitude,
+                      ),
+                      zoom: 16,
+                    ),
+                    markers: markers,
+                    onMapCreated: (GoogleMapController controller) {
+                      cubit.setMapController(controller);
+                    },
+                  ),
+                  Positioned(
+                    bottom: 30,
+                    left: 20,
+                    right: 20,
+                    child: defaultButton(
+                      function: () async {
+                        final address = await cubit.reverseGeocoding(
+                          latitude: cubit.position!.latitude,
+                          longitude: cubit.position!.longitude,
+                        );
+                        cubit.signUp(
+                          name: name,
+                          email: email,
+                          password: password,
+                          phone: int.parse(phone),
+                          latitude: cubit.position!.latitude,
+                          longitude: cubit.position!.longitude,
+                          address: address.streetAddress ?? 'شارع غير معروف',
+                        );
+                      },
+                      text: 'Save Address',
+                      foregroundColor: Colors.white,
+                      fontSize: 20.0,
+                      backgroundColor: Colors.teal.shade600.withOpacity(0.9),
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        cubit.determinePosition();
+                      },
+                      backgroundColor: Colors.white,
+                      child: const Icon(Icons.my_location, color: Colors.black),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30.0),
-                child: defaultButton(
-                  function: () async {
-            final         Address address = await cubit.reverseGeocoding(
-                      latitude: cubit.position!.latitude,
-                      longitude: cubit.position!.longitude,
-                    );
-                    cubit.signUp(
-                      name: name,
-                      email: email,
-                      password: password,
-                      phone: int.parse(phone),
-                      latitude: cubit.position!.latitude,
-                      longitude: cubit.position!.longitude,
-                      address: address.streetAddress ?? 'شارع غير معروف',
-                    );
-                  },
-                  text: 'SAVE Address',
-                  foregroundColor: const Color(0xff6C2C2C),
-                  fontSize: 30.0,
-                  backgroundColor: const Color(
-                    0xffB8BB84,
-                  ).withValues(alpha: 0.9),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      bloc: OrgCubit.get(context)..determinePosition(),
+            ),
+          );
+        },
+      ),
     );
   }
 }

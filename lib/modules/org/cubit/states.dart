@@ -127,3 +127,31 @@ class OrgMissionDoneButtonErrorState extends OrgStates {
 
   OrgMissionDoneButtonErrorState(this.error);
 }
+
+class OrgCameraInitializedState extends OrgStates {}
+
+class OrgDogImageAcceptedState extends OrgStates {
+  final String label;
+  final double confidence;
+
+  OrgDogImageAcceptedState(this.label, this.confidence);
+}
+
+class OrgDogImageRejectedState extends OrgStates {
+  final String label;
+  final double confidence;
+
+  OrgDogImageRejectedState(this.label, this.confidence);
+}
+
+class OrgDogImageErrorState extends OrgStates {
+  final String message;
+
+  OrgDogImageErrorState(this.message);
+}
+
+class OrgLocationErrorState extends OrgStates {
+  final String error;
+
+  OrgLocationErrorState(this.error);
+}

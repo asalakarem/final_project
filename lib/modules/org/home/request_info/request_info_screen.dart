@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/shared/components/components.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image/image.dart' as img;
 
 class RequestInfoScreen extends StatelessWidget {
   final int requestId;
@@ -18,6 +20,11 @@ class RequestInfoScreen extends StatelessWidget {
   final dogNumberController = TextEditingController();
   final streetAddressController = TextEditingController();
   final noteController = TextEditingController();
+
+  final ngoDogsCountController = TextEditingController();
+  final ngoDescriptionController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   RequestInfoScreen({
     super.key,
@@ -38,6 +45,7 @@ class RequestInfoScreen extends StatelessWidget {
             type: ContentType.success,
           );
           Navigator.pop(context);
+          OrgCubit.get(context).capturedImages.remove(requestId);
         }
         if (state is OrgMissionDoneButtonSuccessState) {
           OrgCubit.get(context).snackBar(
@@ -70,6 +78,7 @@ class RequestInfoScreen extends StatelessWidget {
         streetAddressController.text = model.streetAddress ?? '';
         noteController.text = model.description ?? '';
         return Scaffold(
+          key: scaffoldKey,
           appBar: defaultAppBar(
             context: context,
             backgroundColor: const Color(0xffF2EFEA),
@@ -103,10 +112,13 @@ class RequestInfoScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.memory(
-                            base64Decode(model.dogImage!),
-                            fit: BoxFit.cover,
-                          ),
+                          child:
+                              model.dogImage != null
+                                  ? Image.memory(
+                                    base64Decode(model.dogImage!),
+                                    fit: BoxFit.cover,
+                                  )
+                                  : const Center(child: Text('لا توجد صورة')),
                         ),
                       ),
                     ),
@@ -366,11 +378,199 @@ class RequestInfoScreen extends StatelessWidget {
                   ],
                   defaultButton(
                     function: () {
-                      cubit.missionDoneButton(assignmentId: assignmentId);
+                      scaffoldKey.currentState!.showBottomSheet(
+                        showDragHandle: true,
+                        backgroundColor: Colors.grey[200],
+                        (context) => SingleChildScrollView(
+                          child: Form(
+                            key: formKey,
+                            child: Column(
+                              spacing: 20.0,
+                              children: [
+                                BlocBuilder<OrgCubit, OrgStates>(
+                                  builder: (context, state) {
+                                    final cubit = OrgCubit.get(context);
+                                    final capturedImage =
+                                        cubit.capturedImages[requestId];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          cubit.pickImage(requestId);
+                                        },
+                                        child: Container(
+                                          height: 150.0,
+                                          width: 150.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              12.0,
+                                            ),
+                                            image:
+                                                capturedImage != null
+                                                    ? DecorationImage(
+                                                      image: FileImage(
+                                                        File(
+                                                          capturedImage.path,
+                                                        ),
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                    : const DecorationImage(
+                                                      image: AssetImage(
+                                                        'assets/images/pic_profile.jpg',
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                          ),
+                                          clipBehavior:
+                                              Clip.antiAliasWithSaveLayer,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0,
+                                  ),
+                                  child: Neumorphic(
+                                    style: NeumorphicStyle(
+                                      depth: -5,
+                                      intensity: 0.8,
+                                      color: const Color(
+                                        0xffE7E8D8,
+                                      ).withValues(alpha: 0.41),
+                                      boxShape: NeumorphicBoxShape.roundRect(
+                                        BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: TextFormField(
+                                      controller: ngoDogsCountController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        label: Text(
+                                          'Dogs Number',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xff6C2C2C),
+                                          ),
+                                        ),
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 108,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0,
+                                    ),
+                                    child: Neumorphic(
+                                      style: NeumorphicStyle(
+                                        depth: -5,
+                                        intensity: 0.8,
+                                        color: const Color(0xffE7E8D8),
+                                        boxShape: NeumorphicBoxShape.roundRect(
+                                          BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: TextFormField(
+                                        maxLines: null,
+                                        controller: ngoDescriptionController,
+                                        keyboardType: TextInputType.text,
+                                        decoration: const InputDecoration(
+                                          label: Text('Note'),
+                                          labelStyle: TextStyle(
+                                            color: Color(0xff6C2C2C),
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          hintText: 'Add notes',
+                                          hintStyle: TextStyle(
+                                            color: Color(0xff6C2C2C),
+                                            fontSize: 20.0,
+                                          ),
+                                          border: InputBorder.none,
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                defaultButton(
+                                  function: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      final capturedImage =
+                                          cubit.capturedImages[requestId];
+                                      final currentPosition = cubit.position;
+                                      if (capturedImage != null &&
+                                          currentPosition != null) {
+                                        final originalBytes =
+                                            await File(
+                                              capturedImage.path,
+                                            ).readAsBytes();
+                                        final decodedImage = img.decodeImage(
+                                          originalBytes,
+                                        );
+                                        final resized = img.copyResize(
+                                          decodedImage!,
+                                          width: 500,
+                                        );
+                                        final compressedBytes = img.encodeJpg(
+                                          resized,
+                                          quality: 50,
+                                        );
+                                        final base64Image = base64Encode(
+                                          compressedBytes,
+                                        );
+                                        final latitude =
+                                            currentPosition.latitude;
+                                        final longitude =
+                                            currentPosition.longitude;
+                                        cubit.missionDoneButton(
+                                          assignmentId: assignmentId,
+                                          ngoDogsCount: int.parse(
+                                            ngoDogsCountController.text,
+                                          ),
+                                          description:
+                                              ngoDescriptionController.text,
+                                          image: base64Image,
+                                          latitude: latitude,
+                                          longitude: longitude,
+                                        );
+                                      }
+                                    }
+                                  },
+                                  height: 45.0,
+                                  fontSize: 28.0,
+                                  horizontal: 10.0,
+                                  text: 'Done',
+                                  foregroundColor: const Color(0xffEDDED9),
+                                  backgroundColor: const Color(
+                                    0xffAF6B58,
+                                  ).withOpacity(0.92),
+                                ),
+                                const SizedBox(height: 20.0),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
                     },
                     height: 45.0,
                     fontSize: 28.0,
-                    text: 'Done',
+                    text: 'Next to be Done',
                     foregroundColor: const Color(0xffEDDED9),
                     backgroundColor: const Color(0xffAF6B58).withOpacity(0.92),
                   ),

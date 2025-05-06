@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -457,6 +458,14 @@ class MainCubit extends Cubit<MainStates> {
 
   //Map
   Position? position;
+
+  GoogleMapController? _mapController;
+
+  GoogleMapController? get mapController => _mapController;
+
+  void setMapController(GoogleMapController controller) {
+    _mapController = controller;
+  }
 
   Future<Address> reverseGeocoding({
     required double latitude,

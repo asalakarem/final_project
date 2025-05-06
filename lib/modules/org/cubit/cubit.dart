@@ -1,8 +1,12 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/models/org/org_model.dart';
 import 'package:untitled1/models/org/org_request/org_request_model.dart';
@@ -45,6 +49,14 @@ class OrgCubit extends Cubit<OrgStates> {
   }
 
   Position? position;
+
+  GoogleMapController? _mapController;
+
+  GoogleMapController? get mapController => _mapController;
+
+  void setMapController(GoogleMapController controller) {
+    _mapController = controller;
+  }
 
   Future<Address> reverseGeocoding({
     required double latitude,
@@ -307,7 +319,14 @@ class OrgCubit extends Cubit<OrgStates> {
   }
 
   //missionDoneButton
-  void missionDoneButton({required int? assignmentId}) {
+  void missionDoneButton({
+    required int? assignmentId,
+    required String? description,
+    required String? image,
+    required double? longitude,
+    required double? latitude,
+    required int? ngoDogsCount,
+  }) {
     final String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
     ).format(DateTime.now());
@@ -317,7 +336,11 @@ class OrgCubit extends Cubit<OrgStates> {
             'assignmentId': assignmentId,
             'status': 'Mission Done',
             'transactionDate': formattedDate,
-            'notes': 'Mission Done',
+            'notes': description,
+            'completedRequestLongitude': longitude,
+            'completedRequestLatitude': latitude,
+            'ngoDogImage': image,
+            'ngoDogsCount': ngoDogsCount,
           },
         )
         .then((value) {
@@ -421,4 +444,65 @@ class OrgCubit extends Cubit<OrgStates> {
     const DropdownMenuEntry(value: '4', label: '4'),
     const DropdownMenuEntry(value: '5', label: '5'),
   ];
+
+  //ngoDone
+  Map<int, XFile?> capturedImages = {};
+
+  final ImagePicker picker = ImagePicker();
+
+  late Dio dio = Dio();
+
+  void pickImage(int requestId) async {
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+    if (image != null) classifyImage(requestId, image);
+  }
+
+  void updateCapturedImage(int requestId, XFile image) {
+    capturedImages[requestId] = image;
+    emit(OrgCameraInitializedState());
+  }
+
+  void classifyImage(int requestId, XFile image) async {
+    // Step 1: Determine the location
+    final Position currentPosition = await determinePosition();
+    if (currentPosition == null) {
+      emit(OrgLocationErrorState("Unable to retrieve location"));
+      return;
+    }
+    final fileName = image.name;
+    final FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+        contentType: MediaType('image', 'jpeg'),
+      ),
+    });
+    try {
+      final response = await dio.post(
+        'https://skinalayz-api.ashybeach-47c37bbd.southafricanorth.azurecontainerapps.io/classify_image/',
+        data: formData,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      final data = response.data;
+      final predictedClass = data['predicted_class'];
+      final status = data['status'];
+      final confidence = data['confidence'];
+      if (status == 'Accepted' && predictedClass == 'dog') {
+        print('✅ صورة كلب (${(confidence * 100).toStringAsFixed(2)}%)');
+        updateCapturedImage(requestId, image);
+        emit(OrgDogImageAcceptedState(predictedClass, confidence));
+      } else {
+        print('❌ ليست صورة كلب (status: $status, class: $predictedClass)');
+        emit(OrgDogImageRejectedState(predictedClass, confidence));
+      }
+    } catch (e) {
+      print('🚫 خطأ أثناء إرسال الصورة: $e');
+      emit(OrgDogImageErrorState(e.toString()));
+    }
+  }
 }
