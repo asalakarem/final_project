@@ -78,7 +78,7 @@ class OrgComplete extends StatelessWidget {
               ),
             ),
             Text(
-              '${model.assignedDate?.substring(0, 10)}',
+              model.assignedDate!.substring(0, 10),
               style: const TextStyle(
                 color: Color(0xff6C2C2C),
                 fontSize: 19,
@@ -86,7 +86,7 @@ class OrgComplete extends StatelessWidget {
               ),
             ),
             Text(
-              '${model.actionDate?.substring(0, 10)}',
+              model.actionDate!.substring(0, 10),
               style: const TextStyle(
                 color: Color(0xff6C2C2C),
                 fontSize: 19,

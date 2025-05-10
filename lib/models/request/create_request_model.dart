@@ -10,15 +10,15 @@ class CreateRequestModel {
   final int? dogCount;
 
   CreateRequestModel({
-    this.userId,
-    this.status,
-    this.latitude,
-    this.longitude,
-    this.streetAddress,
-    this.submissionTime,
-    this.description,
-    this.dogImage,
-    this.dogCount,
+    required this.userId,
+    required this.status,
+    required this.latitude,
+    required this.longitude,
+    required this.streetAddress,
+    required this.submissionTime,
+    required this.description,
+    required this.dogImage,
+    required this.dogCount,
   });
 
   factory CreateRequestModel.fromJson(Map<String, dynamic> json) {

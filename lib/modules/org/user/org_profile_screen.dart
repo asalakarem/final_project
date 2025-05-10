@@ -23,7 +23,7 @@ class OrgProfileScreen extends StatelessWidget {
         final profile = cubit.loginModel;
         nameController.text = profile!.name!;
         emailController.text = profile.email!;
-        phoneController.text = profile.phoneNumber!.toString();
+        phoneController.text = profile.phoneNumber.toString();
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

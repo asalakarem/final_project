@@ -26,7 +26,7 @@ class UserScreen extends StatelessWidget {
             '${loginModel?.firstName ?? ''} ${loginModel?.lastName ?? ''}'
                 .trim();
         emailController.text = loginModel?.email ?? '';
-        phoneController.text = loginModel?.phoneNumber?.toString() ?? '';
+        phoneController.text = loginModel?.phoneNumber.toString() ?? '';
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

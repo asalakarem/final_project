@@ -23,16 +23,14 @@ class LoginScreen extends StatelessWidget {
     return BlocConsumer<MainCubit, MainStates>(
       listener: (BuildContext context, MainStates state) {
         if (state is MainLoginSuccessState) {
-          if (state.loginModel.userId != null) {
-            CacheHelper.saveData(
-              key: 'userId',
-              value: state.loginModel.userId!,
-            ).then((value) {
-              userId = state.loginModel.userId!;
-              navigateAndFinish(context, const UserActivity());
-            });
-          }
-        }
+          CacheHelper.saveData(
+            key: 'userId',
+            value: state.loginModel.userId,
+          ).then((value) {
+            userId = state.loginModel.userId!;
+            navigateAndFinish(context, const UserActivity());
+          });
+                }
         if (state is MainLoginErrorState) {
           MainCubit.get(context).snackBar(
             context: context,

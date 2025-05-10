@@ -1,12 +1,12 @@
 class UserModel {
-  int? userId;
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? password;
-  int? phoneNumber;
-  String? dateJoined;
-  int? otp;
+  final int? userId;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? password;
+  final int? phoneNumber;
+  final String? dateJoined;
+  final int? otp;
 
   UserModel({
     this.userId,
@@ -19,15 +19,17 @@ class UserModel {
     this.otp,
   });
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-    email = json['email'];
-    password = json['password'];
-    phoneNumber = json['phoneNumber'];
-    dateJoined = json['dateJoined']?.toString();
-    otp = json['otp'] is String ? int.tryParse(json['otp']) : json['otp'];
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      userId: json['userId'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      email: json['email'],
+      password: json['password'],
+      phoneNumber: json['phoneNumber'],
+      dateJoined: json['dateJoined'],
+      otp: json['otp'],
+    );
   }
 
   Map<String, dynamic> toMap() {

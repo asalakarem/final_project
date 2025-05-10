@@ -11,6 +11,7 @@ class OrgActivity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrgCubit, OrgStates>(
+      bloc: OrgCubit.get(context)..checkOrgActiveStatus(context),
       builder: (BuildContext context, OrgStates state) {
         final cubit = OrgCubit.get(context);
         return Scaffold(

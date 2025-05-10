@@ -34,7 +34,7 @@ class EditProfileScreen extends StatelessWidget {
         firstNameController.text = loginModel?.firstName ?? '';
         lastNameController.text = loginModel?.lastName ?? '';
         emailController.text = loginModel?.email ?? '';
-        phoneController.text = loginModel?.phoneNumber?.toString() ?? '';
+        phoneController.text = loginModel?.phoneNumber.toString() ?? '';
         return Scaffold(
           appBar: defaultAppBar(
             context: context,

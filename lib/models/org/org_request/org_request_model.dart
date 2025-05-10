@@ -16,20 +16,20 @@ class OrgRequestModel
   final String? status;
 
   OrgRequestModel({
-    this.requestId,
-    this.assignmentId,
-    this.numberExtraTimeUsed,
-    this.dogImage,
-    this.userName,
-    this.phoneNumber,
-    this.dogsCount,
-    this.streetAddress,
-    this.description,
-    this.latitude,
-    this.longitude,
-    this.assignedDate,
-    this.actionDate,
-    this.status
+    required this.requestId,
+    required this.assignmentId,
+    required this.numberExtraTimeUsed,
+    required this.dogImage,
+    required this.userName,
+    required this.phoneNumber,
+    required this.dogsCount,
+    required this.streetAddress,
+    required this.description,
+    required this.latitude,
+    required this.longitude,
+    required this.assignedDate,
+    required this.actionDate,
+    required this.status
   });
 
   factory OrgRequestModel.fromJson(Map<String, dynamic> json) {

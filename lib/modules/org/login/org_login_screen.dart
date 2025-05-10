@@ -23,16 +23,14 @@ class OrgLoginScreen extends StatelessWidget {
     return BlocConsumer<OrgCubit, OrgStates>(
       listener: (BuildContext context, OrgStates state) {
         if (state is OrgLoginSuccessState) {
-          if (state.loginModel.ngoId != null) {
-            CacheHelper.saveData(
-              key: 'orgId',
-              value: state.loginModel.ngoId!,
-            ).then((value) {
-              orgId = state.loginModel.ngoId!;
-              navigateAndFinish(context, const OrgActivity());
-            });
-          }
-        }
+          CacheHelper.saveData(
+            key: 'orgId',
+            value: state.loginModel.ngoId,
+          ).then((value) {
+            orgId = state.loginModel.ngoId!;
+            navigateAndFinish(context, const OrgActivity());
+          });
+                }
         if (state is OrgLoginErrorState) {
           OrgCubit.get(context).snackBar(
             context: context,

@@ -10,11 +10,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:untitled1/models/org/org_model.dart';
 import 'package:untitled1/models/org/org_request/org_request_model.dart';
+import 'package:untitled1/modules/org/block/block_screen.dart';
 import 'package:untitled1/modules/org/complete/org_complete.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/modules/org/done/org_done.dart';
 import 'package:untitled1/modules/org/home/org_home.dart';
 import 'package:untitled1/modules/org/user/org_profile_screen.dart';
+import 'package:untitled1/shared/components/components.dart';
 import 'package:untitled1/shared/network/endPoint.dart';
 import 'package:untitled1/shared/network/remote/dio_helper.dart';
 
@@ -124,6 +126,15 @@ class OrgCubit extends Cubit<OrgStates> {
           print(error.toString());
           emit(MainGetOrgDataErrorState(error.toString()));
         });
+  }
+
+  void checkOrgActiveStatus(BuildContext context) {
+    final model = loginModel;
+    if (model != null && model.isActive == 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        navigateAndFinish(context, const BlockScreen());
+      });
+    }
   }
 
   void orgLogin({required String email, required String password}) {
@@ -465,10 +476,6 @@ class OrgCubit extends Cubit<OrgStates> {
   void classifyImage(int requestId, XFile image) async {
     // Step 1: Determine the location
     final Position currentPosition = await determinePosition();
-    if (currentPosition == null) {
-      emit(OrgLocationErrorState("Unable to retrieve location"));
-      return;
-    }
     final fileName = image.name;
     final FormData formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(

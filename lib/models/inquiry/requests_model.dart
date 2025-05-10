@@ -8,13 +8,13 @@ class RequestsModel {
   final String? missionDoneNgo;
 
   RequestsModel({
-    this.requestId,
-    this.status,
-    this.submissionTime,
-    this.streetAddress,
-    this.missionDoneDate,
-    this.acceptedDate,
-    this.missionDoneNgo,
+    required this.requestId,
+    required this.status,
+    required this.submissionTime,
+    required this.streetAddress,
+    required this.missionDoneDate,
+    required this.acceptedDate,
+    required this.missionDoneNgo,
   });
 
   factory RequestsModel.fromJson(Map<String, dynamic> json) {

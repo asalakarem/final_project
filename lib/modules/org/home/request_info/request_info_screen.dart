@@ -73,8 +73,8 @@ class RequestInfoScreen extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         userNameController.text = model.userName ?? '';
-        phoneController.text = model.phoneNumber?.toString() ?? '';
-        dogNumberController.text = model.dogsCount?.toString() ?? '';
+        phoneController.text = model.phoneNumber.toString();
+        dogNumberController.text = model.dogsCount.toString();
         streetAddressController.text = model.streetAddress ?? '';
         noteController.text = model.description ?? '';
         return Scaffold(
@@ -115,7 +115,7 @@ class RequestInfoScreen extends StatelessWidget {
                           child:
                               model.dogImage != null
                                   ? Image.memory(
-                                    base64Decode(model.dogImage!),
+                                    base64Decode('${model.dogImage}'),
                                     fit: BoxFit.cover,
                                   )
                                   : const Center(child: Text('لا توجد صورة')),

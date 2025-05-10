@@ -1,14 +1,15 @@
 class OrgModel {
-  int? ngoId;
-  String? name;
-  String? email;
-  String? password;
-  int? phoneNumber;
-  double? latitude;
-  double? longitude;
-  String? address;
-  String? dateJoined;
-  int? otp;
+  final int? ngoId;
+  final String? name;
+  final String? email;
+  final String? password;
+  final int? phoneNumber;
+  final double? latitude;
+  final double? longitude;
+  final String? address;
+  final String? dateJoined;
+  final int? otp;
+  final int? isActive;
 
   OrgModel({
     this.ngoId,
@@ -21,19 +22,23 @@ class OrgModel {
     this.address,
     this.dateJoined,
     this.otp,
+    this.isActive,
   });
 
-  OrgModel.fromJson(Map<String, dynamic> json) {
-    ngoId = json['ngoId'];
-    name = json['name'];
-    email = json['email'];
-    password = json['password'];
-    phoneNumber = json['phoneNumber'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    address = json['address'];
-    dateJoined = json['dateJoined'];
-    otp = json['otp'];
+  factory OrgModel.fromJson(Map<String, dynamic> map) {
+    return OrgModel(
+      ngoId: map['ngoId']?.toInt(),
+      name: map['name'],
+      email: map['email'],
+      password: map['password'],
+      phoneNumber: map['phoneNumber']?.toInt(),
+      latitude: map['latitude']?.toDouble(),
+      longitude: map['longitude']?.toDouble(),
+      address: map['address'],
+      dateJoined: map['dateJoined'],
+      otp: map['otp']?.toInt(),
+      isActive: map['isActive']?.toInt(),
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -48,6 +53,7 @@ class OrgModel {
       'address': address,
       'dateJoined': dateJoined,
       'otp': otp,
+      'isActive': isActive,
     };
   }
 }
