@@ -189,6 +189,7 @@ class OrgCubit extends Cubit<OrgStates> {
 
   //forgetPassword
   void forgetPassword({required String email}) {
+    emit(OrgForgetPasswordLoadingState());
     DioHelper.postData(url: ORG_SEND_EMAIL, query: {'toEmail': email})
         .then((value) {
           OrgModel(email: email);
@@ -204,7 +205,7 @@ class OrgCubit extends Cubit<OrgStates> {
   void verifyOtp({required int otp, required String email}) {
     DioHelper.getData(url: ORG_VERIFY_OTP, query: {'otp': otp, 'email': email})
         .then((value) {
-          OrgModel(otp: otp, email: email);
+          OrgModel(otp: otp);
           emit(OrgVerifyOtpSuccessState());
         })
         .catchError((dynamic error) {
@@ -452,8 +453,6 @@ class OrgCubit extends Cubit<OrgStates> {
     const DropdownMenuEntry(value: '1', label: '1'),
     const DropdownMenuEntry(value: '2', label: '2'),
     const DropdownMenuEntry(value: '3', label: '3'),
-    const DropdownMenuEntry(value: '4', label: '4'),
-    const DropdownMenuEntry(value: '5', label: '5'),
   ];
 
   //ngoDone
@@ -475,7 +474,7 @@ class OrgCubit extends Cubit<OrgStates> {
 
   void classifyImage(int requestId, XFile image) async {
     // Step 1: Determine the location
-    final Position currentPosition = await determinePosition();
+    await determinePosition();
     final fileName = image.name;
     final FormData formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(

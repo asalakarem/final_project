@@ -27,10 +27,19 @@ class OtpScreen extends StatelessWidget {
     return BlocConsumer<MainCubit, MainStates>(
       listener: (BuildContext context, MainStates state) {
         if (state is MainVerifyOtpSuccessState) {
-          navigateTo(context, NewPasswordScreen(email: email,));
+          navigateTo(context, NewPasswordScreen(email: email));
+        }
+        if (state is MainVerifyOtpErrorState) {
+          MainCubit.get(context).snackBar(
+            context: context,
+            title: 'Error',
+            message: 'Invalid OTP',
+            type: ContentType.failure,
+          );
         }
       },
       builder: (BuildContext context, MainStates state) {
+        final cubit = MainCubit.get(context);
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(
@@ -98,37 +107,43 @@ class OtpScreen extends StatelessWidget {
                         Row(
                           spacing: 15.0,
                           children: [
-                            _buildOtpField(otpController1, focusNode1, focusNode2, context),
-                            _buildOtpField(otpController2, focusNode2, focusNode3, context),
-                            _buildOtpField(otpController3, focusNode3, focusNode4, context),
-                            _buildOtpField(otpController4, focusNode4, null, context),
-                          ],
-                        ),
-                        const SizedBox(height: 40.0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'resend code in 00:23sec',
-                            style: GoogleFonts.inter(
-                              fontSize: 16.0,
-                              color: const Color(0xff635C5C),
+                            _buildOtpField(
+                              otpController1,
+                              focusNode1,
+                              focusNode2,
+                              context,
                             ),
-                          ),
+                            _buildOtpField(
+                              otpController2,
+                              focusNode2,
+                              focusNode3,
+                              context,
+                            ),
+                            _buildOtpField(
+                              otpController3,
+                              focusNode3,
+                              focusNode4,
+                              context,
+                            ),
+                            _buildOtpField(
+                              otpController4,
+                              focusNode4,
+                              null,
+                              context,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 40.0),
                         defaultButton(
                           function: () {
-                            final String otpString = otpController1.text + otpController2.text + otpController3.text + otpController4.text;
+                            final String otpString =
+                                otpController1.text +
+                                otpController2.text +
+                                otpController3.text +
+                                otpController4.text;
                             if (otpString.length == 4) {
                               final int otp = int.tryParse(otpString) ?? 0;
-                              MainCubit.get(context).verifyOtp(otp: otp, email: email);
-                            } else {
-                              MainCubit.get(context).snackBar(
-                                context: context,
-                                title: 'Invalid OTP',
-                                message: 'Please enter a valid 4-digit OTP',
-                                type: ContentType.warning,
-                              );
+                              cubit.verifyOtp(otp: otp, email: email);
                             }
                           },
                           text: 'Reset Password...',
@@ -149,7 +164,12 @@ class OtpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOtpField(TextEditingController controller, FocusNode focusNode, FocusNode? nextFocusNode, BuildContext context) {
+  Widget _buildOtpField(
+    TextEditingController controller,
+    FocusNode focusNode,
+    FocusNode? nextFocusNode,
+    BuildContext context,
+  ) {
     return Expanded(
       child: SizedBox(
         height: 70.0,
@@ -158,22 +178,29 @@ class OtpScreen extends StatelessWidget {
             depth: -5,
             intensity: 0.8,
             color: const Color(0xffE7E8D8),
-            boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.circular(12),
-            ),
+            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
           ),
           child: TextFormField(
             controller: controller,
             keyboardType: TextInputType.number,
             maxLength: 1,
-            focusNode: focusNode, // Set the focus node
+            focusNode: focusNode,
+            // Set the focus node
             decoration: const InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter OTP';
+              }
+              return null;
+            },
             onChanged: (value) {
               if (value.isNotEmpty && nextFocusNode != null) {
-                // Move focus to the next field
                 FocusScope.of(context).requestFocus(nextFocusNode);
               }
             },

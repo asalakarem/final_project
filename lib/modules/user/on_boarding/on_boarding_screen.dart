@@ -158,11 +158,15 @@ class OnBoardingScreenState extends State<OnBoardingScreen> {
         Text(
           model.title,
           style: const TextStyle(fontSize: 20.0, color: Color(0xff6C2C2C)),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 30.0),
         Text(
           model.body,
           style: const TextStyle(fontSize: 14.0, color: Color(0xff6C2C2C)),
+          maxLines: 4,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     ),

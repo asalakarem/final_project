@@ -11,6 +11,8 @@ class MainChangePasswordVisibilityStates extends MainStates {}
 
 class MainCameraInitializedState extends MainStates {}
 
+class MainDeleteDogImageState extends MainStates {}
+
 class MainDogImageAcceptedState extends MainStates {
   final String label;
   final double confidence;
@@ -74,6 +76,8 @@ class MainGetUserDataErrorState extends MainStates {
 
   MainGetUserDataErrorState(this.error);
 }
+
+class MainSendEmailLoadingState extends MainStates {}
 
 class MainSendEmailSuccessState extends MainStates {}
 

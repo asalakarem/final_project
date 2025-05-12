@@ -28,6 +28,14 @@ class OrgOtpScreen extends StatelessWidget {
         if (state is OrgVerifyOtpSuccessState) {
           navigateAndFinish(context, OrgNewPasswordScreen(email: email,));
         }
+        if (state is OrgVerifyOtpErrorState) {
+          OrgCubit.get(context).snackBar(
+            context: context,
+            title: 'Error',
+            message: 'Invalid OTP',
+            type: ContentType.failure,
+          );
+        }
       },
       builder: (BuildContext context, OrgStates state) {
         return Scaffold(
@@ -104,30 +112,12 @@ class OrgOtpScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 40.0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'resend code in 00:23sec',
-                            style: GoogleFonts.inter(
-                              fontSize: 16.0,
-                              color: const Color(0xff635C5C),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 40.0),
                         defaultButton(
                           function: () {
                             final String otpString = otpController1.text + otpController2.text + otpController3.text + otpController4.text;
                             if (otpString.length == 4) {
                               final int otp = int.tryParse(otpString) ?? 0;
                               OrgCubit.get(context).verifyOtp(otp: otp, email: email);
-                            } else {
-                              OrgCubit.get(context).snackBar(
-                                context: context,
-                                title: 'Invalid OTP',
-                                message: 'Please enter a valid 4-digit OTP',
-                                type: ContentType.warning,
-                              );
                             }
                           },
                           text: 'Reset Password...',
@@ -170,6 +160,12 @@ class OrgOtpScreen extends StatelessWidget {
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter OTP';
+              }
+              return null;
+            },
             onChanged: (value) {
               if (value.isNotEmpty && nextFocusNode != null) {
                 // Move focus to the next field

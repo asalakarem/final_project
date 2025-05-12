@@ -4,6 +4,8 @@ abstract class OrgStates {}
 
 class OrgInitialStates extends OrgStates {}
 
+class OrgTimerStates extends OrgStates {}
+
 class OrgChangeIndexStates extends OrgStates {}
 
 class OrgChangePasswordVisibilityStates extends OrgStates {}
@@ -31,6 +33,8 @@ class OrgSignUpErrorState extends OrgStates {
 
   OrgSignUpErrorState(this.error);
 }
+
+class OrgForgetPasswordLoadingState extends OrgStates {}
 
 class OrgForgetPasswordSuccessState extends OrgStates {}
 

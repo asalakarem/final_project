@@ -205,8 +205,11 @@ class SignupScreen extends StatelessWidget {
                               child: TextFormField(
                                 controller: emailController,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value == null || value.isEmpty) {
                                     return 'Please enter your email';
+                                  }
+                                  if (!value.endsWith('@gmail.com')) {
+                                    return 'Email must be a @gmail.com address';
                                   }
                                   return null;
                                 },
@@ -241,8 +244,16 @@ class SignupScreen extends StatelessWidget {
                               child: TextFormField(
                                 controller: passwordController,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value == null || value.isEmpty) {
                                     return 'Please enter your password';
+                                  }
+                                  if (value.length < 8) {
+                                    return 'Password must be at least 8 characters long';
+                                  }
+                                  if (!RegExp(
+                                    r'^(?=.*[a-zA-Z])(?=.*\d)',
+                                  ).hasMatch(value)) {
+                                    return 'Password must contain both letters and numbers';
                                   }
                                   return null;
                                 },
@@ -291,6 +302,9 @@ class SignupScreen extends StatelessWidget {
                                   if (value!.isEmpty) {
                                     return 'Please enter your phone number';
                                   }
+                                  if (value.length < 11) {
+                                    return 'phone number must be at least 11 characters long';
+                                  }
                                   return null;
                                 },
                                 decoration: const InputDecoration(
@@ -300,23 +314,6 @@ class SignupScreen extends StatelessWidget {
                                     vertical: 12,
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(height: 15.0),
-                            Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Image.asset(
-                                      'assets/images/google.png',
-                                      height: 24.0,
-                                      width: 24.0,
-                                      color: const Color(0xff627254),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ),
                             const SizedBox(height: 15.0),

@@ -153,6 +153,23 @@ class RequestScreen extends StatelessWidget {
                             vertical: 12,
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter dogs number';
+                          }
+                          final number = int.tryParse(value);
+                          if (number == null) {
+                            return 'Please enter a valid number';
+                          }
+                          if (number == 0) {
+                            return 'Number cannot be zero';
+                          }
+                          if (number >= 20) {
+                            return 'Number cannot be more than 20';
+                          }
+                          return null;
+                        },
+
                       ),
                     ),
                   ),
@@ -194,6 +211,13 @@ class RequestScreen extends StatelessWidget {
                               vertical: 12,
                             ),
                           ),
+                          validator: (value){
+                            if(value!.isEmpty)
+                            {
+                              return 'Please enter description';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ),

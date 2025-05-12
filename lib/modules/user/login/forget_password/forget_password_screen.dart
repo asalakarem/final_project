@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/layout/cubit/cubit.dart';
 import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/modules/user/login/otp/otp_screen.dart';
@@ -23,6 +24,17 @@ class ForgetPasswordScreen extends StatelessWidget {
       },
       builder: (BuildContext context, MainStates state) {
         final cubit = MainCubit.get(context);
+        if (state is MainSendEmailLoadingState) {
+          return Scaffold(
+            backgroundColor: const Color(0xff627254),
+            body: Center(
+              child: LoadingAnimationWidget.discreteCircle(
+                color: Colors.white, // أو استخدم color كما في حالتك إذا تم تعريفه مسبقًا
+                size: 50, // حجم أوضح لعنصر التحميل
+              ),
+            ),
+          );
+        }
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(

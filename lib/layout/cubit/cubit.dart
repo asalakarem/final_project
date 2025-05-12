@@ -96,7 +96,7 @@ class MainCubit extends Cubit<MainStates> {
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text('التقاط صورة'),
+                title: const Text('Take a picture'),
                 onTap: () async {
                   Navigator.pop(context);
                   final XFile? image = await picker.pickImage(source: ImageSource.camera);
@@ -105,11 +105,20 @@ class MainCubit extends Cubit<MainStates> {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('اختيار من المعرض'),
+                title: const Text('Select from gallery'),
                 onTap: () async {
                   Navigator.pop(context);
                   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
                   if (image != null) classifyImage(image);
+                },
+              ),
+              if (capturedImage != null)
+              ListTile(
+                leading: const Icon(Icons.delete_forever),
+                title: const Text('Delete Image'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  deleteImage();
                 },
               ),
             ],
@@ -117,6 +126,11 @@ class MainCubit extends Cubit<MainStates> {
         );
       },
     );
+  }
+
+  void deleteImage() {
+    capturedImage = null;
+    emit(MainDeleteDogImageState());
   }
 
   void updateCapturedImage(XFile image) {
@@ -268,6 +282,7 @@ class MainCubit extends Cubit<MainStates> {
 
   //forgot password
   void sendEmail({required String email}) {
+    emit(MainSendEmailLoadingState());
     DioHelper.postData(url: SEND_EMAIL, query: {'toEmail': email})
         .then((value) {
           UserModel(email: email);

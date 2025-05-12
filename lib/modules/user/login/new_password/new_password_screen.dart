@@ -123,6 +123,20 @@ class NewPasswordScreen extends StatelessWidget {
                                       vertical: 12,
                                     ),
                                   ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'password must not be empty';
+                                    }
+                                    if (value.length < 8) {
+                                      return 'Password must be at least 8 characters long';
+                                    }
+                                    if (!RegExp(
+                                      r'^(?=.*[a-zA-Z])(?=.*\d)',
+                                    ).hasMatch(value)) {
+                                      return 'Password must contain both letters and numbers';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                               const SizedBox(height: 30.0),

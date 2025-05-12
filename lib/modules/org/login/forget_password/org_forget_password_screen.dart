@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/modules/org/login/otp/org_otp_screen.dart';
@@ -23,6 +24,17 @@ class OrgForgetPasswordScreen extends StatelessWidget {
       },
       builder: (BuildContext context, OrgStates state) {
         final cubit = OrgCubit.get(context);
+        if (state is OrgForgetPasswordLoadingState) {
+          return Scaffold(
+            backgroundColor: const Color(0xff627254),
+            body: Center(
+              child: LoadingAnimationWidget.discreteCircle(
+                color: Colors.white,
+                size: 50,
+              ),
+            ),
+          );
+        }
         return Scaffold(
           backgroundColor: const Color(0xff627254),
           appBar: defaultAppBar(

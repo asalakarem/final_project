@@ -9,10 +9,10 @@ class InvolvedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Column(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -33,15 +33,14 @@ class InvolvedScreen extends StatelessWidget {
               myDivider(color: const Color(0xff6C2C2C)),
             ],
           ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Column(
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.15,
+          ),
+          Column(
             spacing: 15.0,
             children: [
               InkWell(
-                onTap: ()
-                {
+                onTap: () {
                   navigateTo(context, const MadScreen());
                 },
                 child: SizedBox(
@@ -52,7 +51,10 @@ class InvolvedScreen extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         height: 90.0,
-                        padding: const EdgeInsetsDirectional.only(start: 25.0, top: 10.0),
+                        padding: const EdgeInsetsDirectional.only(
+                          start: 25.0,
+                          top: 10.0,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
                           color: const Color(0xffC79E9E),
@@ -75,8 +77,7 @@ class InvolvedScreen extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: ()
-                {
+                onTap: () {
                   navigateTo(context, const DealScreen());
                 },
                 child: SizedBox(
@@ -87,7 +88,10 @@ class InvolvedScreen extends StatelessWidget {
                       Container(
                         width: double.infinity,
                         height: 90.0,
-                        padding: const EdgeInsetsDirectional.only(end: 25.0, top: 10.0),
+                        padding: const EdgeInsetsDirectional.only(
+                          end: 25.0,
+                          top: 10.0,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
                           color: const Color(0xffB5C18E),
@@ -111,8 +115,8 @@ class InvolvedScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

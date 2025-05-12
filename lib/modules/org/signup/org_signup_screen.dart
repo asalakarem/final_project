@@ -139,6 +139,9 @@ class OrgSignupScreen extends StatelessWidget {
                                   if (value!.isEmpty) {
                                     return 'Please enter your phone number';
                                   }
+                                  if (value.length < 11) {
+                                    return 'phone number must be at least 11 characters long';
+                                  }
                                   return null;
                                 },
                                 decoration: const InputDecoration(
@@ -171,8 +174,11 @@ class OrgSignupScreen extends StatelessWidget {
                               child: TextFormField(
                                 controller: emailController,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value == null || value.isEmpty) {
                                     return 'Please enter your email';
+                                  }
+                                  if (!value.endsWith('@gmail.com')) {
+                                    return 'Email must be a @gmail.com address';
                                   }
                                   return null;
                                 },
@@ -207,8 +213,16 @@ class OrgSignupScreen extends StatelessWidget {
                               child: TextFormField(
                                 controller: passwordController,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
+                                  if (value == null || value.isEmpty) {
                                     return 'Please enter your password';
+                                  }
+                                  if (value.length < 8) {
+                                    return 'Password must be at least 8 characters long';
+                                  }
+                                  if (!RegExp(
+                                    r'^(?=.*[a-zA-Z])(?=.*\d)',
+                                  ).hasMatch(value)) {
+                                    return 'Password must contain both letters and numbers';
                                   }
                                   return null;
                                 },
@@ -232,17 +246,19 @@ class OrgSignupScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 30.0),
                             const SizedBox(height: 20.0),
                             defaultButton(
                               function: () {
                                 if (formKey.currentState!.validate()) {
-                                  navigateTo(context, MapScreen(
-                                    name: nameController.text,
-                                    email: emailController.text,
-                                    phone: phoneController.text,
-                                    password: passwordController.text,
-                                  ));
+                                  navigateTo(
+                                    context,
+                                    MapScreen(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      phone: phoneController.text,
+                                      password: passwordController.text,
+                                    ),
+                                  );
                                 }
                               },
                               text: 'Lets get started...',
