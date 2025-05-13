@@ -5,6 +5,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/shared/components/components.dart';
@@ -70,7 +71,12 @@ class RequestInfoScreen extends StatelessWidget {
         final cubit = OrgCubit.get(context);
         final model = cubit.requestModel;
         if (state is OrgGetRequestInfoLoadingState || model == null) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: LoadingAnimationWidget.discreteCircle(
+              color: Colors.white,
+              size: 50,
+            ),
+          );
         }
         userNameController.text = model.userName ?? '';
         phoneController.text = model.phoneNumber.toString();

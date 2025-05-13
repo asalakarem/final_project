@@ -10,7 +10,7 @@ class OrgChangeIndexStates extends OrgStates {}
 
 class OrgChangePasswordVisibilityStates extends OrgStates {}
 
-class OrgLoadingStates extends OrgStates {}
+class OrgLocationLoadingStates extends OrgStates {}
 
 class OrgLocationSuccessState extends OrgStates {}
 

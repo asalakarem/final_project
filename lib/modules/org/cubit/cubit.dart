@@ -73,7 +73,7 @@ class OrgCubit extends Cubit<OrgStates> {
   }
 
   Future<Position> determinePosition() async {
-    emit(OrgLoadingStates());
+    emit(OrgLocationLoadingStates());
 
     bool serviceEnabled;
     LocationPermission permission;

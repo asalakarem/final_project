@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/models/org/org_request/org_request_model.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
@@ -16,7 +17,12 @@ class OrgHome extends StatelessWidget {
       builder: (BuildContext context, OrgStates state) {
         final cubit = OrgCubit.get(context);
         if (state is OrgGetRequestLoadingState) {
-          const Center(child: CircularProgressIndicator());
+          Center(
+            child: LoadingAnimationWidget.discreteCircle(
+              color: Colors.white,
+              size: 50,
+            ),
+          );
         }
         return Column(
           spacing: 10.0,

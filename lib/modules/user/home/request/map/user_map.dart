@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/layout/cubit/cubit.dart';
 import 'package:untitled1/layout/cubit/states.dart';
 import 'package:untitled1/shared/components/components.dart';
@@ -19,8 +20,13 @@ class UserMap extends StatelessWidget {
           final cubit = MainCubit.get(context);
 
           if (state is MainLoadingMapStates) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+            return Scaffold(
+              body: Center(
+                child: LoadingAnimationWidget.discreteCircle(
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
             );
           }
 

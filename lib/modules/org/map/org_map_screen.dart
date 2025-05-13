@@ -1,6 +1,8 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/modules/org/cubit/cubit.dart';
 import 'package:untitled1/modules/org/cubit/states.dart';
 import 'package:untitled1/modules/org/login/org_login_screen.dart';
@@ -28,6 +30,12 @@ class MapScreen extends StatelessWidget {
         listener: (BuildContext context, OrgStates state) {
           if (state is OrgSignUpSuccessState) {
             navigateAndFinish(context, OrgLoginScreen());
+            OrgCubit.get(context).snackBar(
+              context: context,
+              title: 'Sign Up Success',
+              message: 'Wait for admin approval',
+              type: ContentType.success,
+            );
           }
           if (state is OrgSignUpErrorState) {
             Navigator.pop(context);
@@ -36,9 +44,14 @@ class MapScreen extends StatelessWidget {
         builder: (BuildContext context, OrgStates state) {
           final cubit = OrgCubit.get(context);
 
-          if (state is OrgLoadingStates) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+          if (state is OrgLocationLoadingStates) {
+            return Scaffold(
+              body: Center(
+                child: LoadingAnimationWidget.discreteCircle(
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
             );
           }
 

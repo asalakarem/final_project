@@ -20,17 +20,17 @@ class MissionDoneScreen extends StatelessWidget {
             label: 'Mission Done',
           ),
           body:
-          cubit.doneList.isEmpty
-              ? const Center(child: Text('No Mission Done requests found'))
-              : ListView.builder(
-            itemBuilder:
-                (context, index) => buildMissionDoneItem(
-              cubit.doneList[index],
-              context,
-              index,
-            ),
-            itemCount: cubit.doneList.length,
-          ),
+              cubit.doneList.isEmpty
+                  ? const Center(child: Text('No Mission Done requests found'))
+                  : ListView.builder(
+                    itemBuilder:
+                        (context, index) => buildMissionDoneItem(
+                          cubit.doneList[index],
+                          context,
+                          index,
+                        ),
+                    itemCount: cubit.doneList.length,
+                  ),
         );
       },
       bloc: MainCubit.get(context)..doneRequest(),
@@ -38,10 +38,10 @@ class MissionDoneScreen extends StatelessWidget {
   }
 
   Widget buildMissionDoneItem(
-      RequestsModel model,
-      BuildContext context,
-      int index,
-      ) => Container(
+    RequestsModel model,
+    BuildContext context,
+    int index,
+  ) => Container(
     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     padding: const EdgeInsets.symmetric(horizontal: 16),
     decoration: BoxDecoration(
@@ -64,29 +64,29 @@ class MissionDoneScreen extends StatelessWidget {
             GestureDetector(
               onTap:
                   () => MainCubit.get(
-                context,
-              ).changeInProgress(index, 'missionDone'),
+                    context,
+                  ).changeInProgress(index, 'missionDone'),
               child: CircleAvatar(
                 radius: 15.0,
                 backgroundColor: const Color(0xff6C2C2C),
                 child:
-                MainCubit.get(context).isCollapse['missionDone']! &&
-                    MainCubit.get(context).currentIndexCollapse == index
-                    ? const Icon(
-                  Icons.keyboard_arrow_up,
-                  color: Colors.white,
-                )
-                    : const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                ),
+                    MainCubit.get(context).isCollapse['missionDone']! &&
+                            MainCubit.get(context).currentIndexCollapse == index
+                        ? const Icon(
+                          Icons.keyboard_arrow_up,
+                          color: Colors.white,
+                        )
+                        : const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.white,
+                        ),
               ),
             ),
           ],
         ),
         if (MainCubit.get(context).isCollapse['missionDone']! &&
             MainCubit.get(context).currentIndexCollapse == index) ...[
-          const Divider(color: Colors.white,),
+          const Divider(color: Colors.white),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -125,6 +125,14 @@ class MissionDoneScreen extends StatelessWidget {
               Text(
                 'Done in: ${model.missionDoneDate?.substring(0, 10)}',
                 style: const TextStyle(
+                  color: Color(0xff6C2C2C),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                'Note: Dog is save and receiving care\nThanks for solving a problem ❤️🐶',
+                style: TextStyle(
                   color: Color(0xff6C2C2C),
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
