@@ -534,6 +534,7 @@ class MainCubit extends Cubit<MainStates> {
         elevation: 0,
         behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.transparent,
+        duration: const Duration(seconds: 6),
         content: AwesomeSnackbarContent(
           title: title,
           message: message,
@@ -542,4 +543,17 @@ class MainCubit extends Cubit<MainStates> {
       ),
     );
   }
+
+  void deleteRequest({required int requestId}) {
+    DioHelper.deleteData(
+      url: '$DELETE_REQUEST/$requestId',
+    ).then((value) {
+      inProgressList.removeWhere((element) => element.requestId == requestId);
+      emit(MainDeleteRequestSuccessState());
+    }).catchError((dynamic error) {
+      print(error.toString());
+      emit(MainDeleteRequestErrorState(error.toString()));
+    });
+  }
+
 }

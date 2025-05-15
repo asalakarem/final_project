@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/layout/cubit/cubit.dart';
@@ -10,7 +11,17 @@ class InProgressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainCubit, MainStates>(
+    return BlocConsumer<MainCubit, MainStates>(
+      listener: (BuildContext context, MainStates state) {
+        if (state is MainDeleteRequestErrorState) {
+          MainCubit.get(context).snackBar(
+              context: context,
+              title: 'Error',
+              message: state.error,
+              type: ContentType.failure
+          );
+        }
+      },
       builder: (BuildContext context, MainStates state) {
         final cubit = MainCubit.get(context);
         return Scaffold(
@@ -86,7 +97,7 @@ class InProgressScreen extends StatelessWidget {
         ),
         if (MainCubit.get(context).isCollapse['inProgress']! &&
             MainCubit.get(context).currentIndexCollapse == index) ...[
-          const Divider(color: Colors.white,),
+          const Divider(color: Colors.white),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -113,6 +124,71 @@ class InProgressScreen extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+              defaultButton(
+                function:
+                    () => showDialog<void>(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            content: const Text(
+                              'Are you sure you want to cancel this request?',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xff6C2C2C),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            actions: <Widget>[
+                              Row(
+                                spacing: 15.0,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor:
+                                        const Color(0xffB8BB84),
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(5.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        MainCubit.get(context).deleteRequest(requestId: model.requestId!);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('yes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextButton(
+                                      style: TextButton.styleFrom(
+                                        backgroundColor:
+                                        const Color(0xffAF6B58),
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(5.0),
+                                        ),
+                                      ),
+                                      child: const Text('cancel', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                    ),
+                text: 'Cancel Request',
+                height: 40,
+                horizontal: 0,
+                fontSize: 25,
+                vertical: 10,
+                backgroundColor: const Color(0xff6C2C2C),
               ),
             ],
           ),

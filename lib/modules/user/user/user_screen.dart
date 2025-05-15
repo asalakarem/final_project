@@ -24,7 +24,8 @@ class UserScreen extends StatelessWidget {
         final loginModel = cubit.loginModel;
 
         nameController.text =
-            '${loginModel?.firstName ?? ''} ${loginModel?.lastName ?? ''}'.trim();
+            '${loginModel?.firstName ?? ''} ${loginModel?.lastName ?? ''}'
+                .trim();
         emailController.text = loginModel?.email ?? '';
         phoneController.text = loginModel?.phoneNumber.toString() ?? '';
 
@@ -72,8 +73,9 @@ class UserScreen extends StatelessWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        backgroundColor:
-                                        const Color(0xffD19E9E).withOpacity(0.95),
+                                        backgroundColor: const Color(
+                                          0xffD19E9E,
+                                        ).withOpacity(0.95),
                                         content: Text(
                                           'Are you sure you want to log out?',
                                           textAlign: TextAlign.center,
@@ -83,44 +85,78 @@ class UserScreen extends StatelessWidget {
                                           ),
                                         ),
                                         actions: [
-                                          TextButton(
-                                            style: TextButton.styleFrom(
-                                              backgroundColor:
-                                              const Color(0xffB8BB84),
-                                              foregroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(5.0),
+                                          Row(
+                                            spacing: 15.0,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color(0xffB8BB84),
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            5.0,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    CacheHelper.removeData(
+                                                      key: 'userId',
+                                                    ).then((value) {
+                                                      navigateAndFinish(
+                                                        context,
+                                                        const SelectScreen(),
+                                                      );
+                                                      cubit.currentIndex = 0;
+                                                    });
+                                                    CacheHelper.removeData(
+                                                      key: 'onBoarding',
+                                                    );
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text(
+                                                    'yes',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            onPressed: () {
-                                              CacheHelper.removeData(key: 'userId')
-                                                  .then((value) {
-                                                navigateAndFinish(
-                                                  context,
-                                                  const SelectScreen(),
-                                                );
-                                                cubit.currentIndex = 0;
-                                              });
-                                              CacheHelper.removeData(
-                                                key: 'onBoarding',
-                                              );
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('yes'),
-                                          ),
-                                          TextButton(
-                                            style: TextButton.styleFrom(
-                                              backgroundColor:
-                                              const Color(0xffAF6B58),
-                                              foregroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(5.0),
+                                              Expanded(
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color(0xffAF6B58),
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            5.0,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    'cancel',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                            child: const Text('cancel'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
+                                            ],
                                           ),
                                         ],
                                       );
@@ -174,7 +210,7 @@ class UserScreen extends StatelessWidget {
     );
   }
 
-// لتقليل التكرار، أنشأنا عنصر خاص بحقول Neumorphic
+  // لتقليل التكرار، أنشأنا عنصر خاص بحقول Neumorphic
   Widget buildNeumorphicField({
     required TextEditingController controller,
     required String label,
@@ -184,9 +220,7 @@ class UserScreen extends StatelessWidget {
         depth: 0,
         intensity: 0.8,
         color: const Color(0xffD19E9E).withOpacity(0.41),
-        boxShape: NeumorphicBoxShape.roundRect(
-          BorderRadius.circular(12),
-        ),
+        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
       ),
       child: TextFormField(
         controller: controller,
@@ -208,5 +242,4 @@ class UserScreen extends StatelessWidget {
       ),
     );
   }
-
 }

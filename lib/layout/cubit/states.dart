@@ -140,3 +140,11 @@ class MainDoneRequestErrorState extends MainStates {
 }
 
 class MainInProgressChangeState extends MainStates {}
+
+class MainDeleteRequestSuccessState extends MainStates {}
+
+class MainDeleteRequestErrorState extends MainStates {
+  String error;
+
+  MainDeleteRequestErrorState(this.error);
+}

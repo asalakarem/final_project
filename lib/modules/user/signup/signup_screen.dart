@@ -22,6 +22,12 @@ class SignupScreen extends StatelessWidget {
     return BlocConsumer<MainCubit, MainStates>(
       listener: (BuildContext context, MainStates state) {
         if (state is MainRegisterSuccessState) {
+          MainCubit.get(context).snackBar(
+            context: context,
+            title: 'Register Successfully',
+            message: 'You Can Login Now',
+            type: ContentType.success,
+          );
           navigateAndFinish(context, LoginScreen());
         }
         if (state is MainRegisterErrorState) {

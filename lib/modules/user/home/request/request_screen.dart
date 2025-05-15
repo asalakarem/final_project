@@ -26,7 +26,7 @@ class RequestScreen extends StatelessWidget {
           MainCubit.get(context).snackBar(
             context: context,
             title: 'Success',
-            message: 'Request Created Successfully',
+            message: 'Request Created Successfully Follow Your Request Status',
             type: ContentType.success,
           );
           Navigator.pop(context);
@@ -169,7 +169,6 @@ class RequestScreen extends StatelessWidget {
                           }
                           return null;
                         },
-
                       ),
                     ),
                   ),

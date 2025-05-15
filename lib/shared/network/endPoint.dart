@@ -20,6 +20,8 @@ const GET_ACCEPTED = 'requests/getacceptedrequests';
 
 const GET_DONE = 'requests/getmissiondonerequests';
 
+const DELETE_REQUEST = 'requests';
+
 const ORGLOGIN = 'ngos/login';
 
 const ORG_SEND_EMAIL= 'ngos/send-email';
