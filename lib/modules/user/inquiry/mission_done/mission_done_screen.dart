@@ -131,7 +131,7 @@ class MissionDoneScreen extends StatelessWidget {
                 ),
               ),
               const Text(
-                'Note: Dog is save and receiving care\nThanks for solving a problem ❤️🐶',
+                'Thanks for solving a problem ❤️🐶',
                 style: TextStyle(
                   color: Color(0xff6C2C2C),
                   fontSize: 20,

@@ -369,6 +369,7 @@ class OrgCubit extends Cubit<OrgStates> {
   List<OrgRequestModel> acceptRequestList = [];
 
   void getAcceptRequest() {
+    emit(OrgGetAcceptLoadingState());
     DioHelper.getData(url: ORG_ACCEPT_REQUEST)
         .then((value) {
           acceptRequestList = [];
@@ -424,6 +425,7 @@ class OrgCubit extends Cubit<OrgStates> {
   List<OrgRequestModel> missionDoneList = [];
 
   void getMissionDone() {
+    emit(OrgGetMissionDoneLoadingState());
     DioHelper.getData(url: ORG_MISSION_DONE)
         .then((value) {
           missionDoneList = [];
@@ -474,7 +476,8 @@ class OrgCubit extends Cubit<OrgStates> {
 
   void classifyImage(int requestId, XFile image) async {
     // Step 1: Determine the location
-    await determinePosition();
+    final position = await determinePosition();
+    print('Latitude: $position.latitude, Longitude: $position.longitude');
     final fileName = image.name;
     final FormData formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(

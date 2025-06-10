@@ -393,7 +393,18 @@ class RequestInfoScreen extends StatelessWidget {
                             child: Column(
                               spacing: 20.0,
                               children: [
-                                BlocBuilder<OrgCubit, OrgStates>(
+                                BlocConsumer<OrgCubit, OrgStates>(
+                                  listener: (context, state) {
+                                    if (state is OrgDogImageRejectedState) {
+                                      OrgCubit.get(context).snackBar(
+                                        context: context,
+                                        title: 'Error',
+                                        message: 'This image is not dog',
+                                        type: ContentType.failure,
+                                      );
+                                      Navigator.pop(context);
+                                    }
+                                  },
                                   builder: (context, state) {
                                     final cubit = OrgCubit.get(context);
                                     final capturedImage =
@@ -457,7 +468,7 @@ class RequestInfoScreen extends StatelessWidget {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         label: Text(
-                                          'Dogs Number',
+                                          'Taken Dogs Number',
                                           style: TextStyle(
                                             fontSize: 20.0,
                                             fontWeight: FontWeight.bold,

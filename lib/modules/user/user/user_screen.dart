@@ -67,7 +67,7 @@ class UserScreen extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                              child: TextButton(
+                              child: TextButton.icon(
                                 onPressed: () {
                                   showDialog<void>(
                                     context: context,
@@ -163,20 +163,17 @@ class UserScreen extends StatelessWidget {
                                     },
                                   );
                                 },
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.logout, color: Colors.black),
-                                    SizedBox(width: 10.0),
-                                    Text(
-                                      'Logout',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xffC79E9E),
-                                      ),
-                                    ),
-                                  ],
+                                icon: const Icon(
+                                  Icons.logout,
+                                  color: Colors.black,
+                                ),
+                                label: const Text(
+                                  'Logout',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffC79E9E),
+                                  ),
                                 ),
                               ),
                             ),

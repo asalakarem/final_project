@@ -8,7 +8,6 @@ import 'package:untitled1/shared/components/components.dart';
 import 'package:untitled1/shared/network/local/cache_helper.dart';
 
 class OrgProfileScreen extends StatelessWidget {
-
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
@@ -127,74 +126,75 @@ class OrgProfileScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        showDialog<void>(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              backgroundColor: const Color(
-                                0xffD19E9E,
-                              ).withValues(alpha: 0.95),
-                              content: Text(
-                                'Are you sure you want to log out?',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 24.0,
-                                  color: const Color(0xff6C2C2C),
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: const Color(0xffB8BB84),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(5.0),
-                                    ),
+                    Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: TextButton.icon(
+                        onPressed: () {
+                          showDialog<void>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: const Color(
+                                  0xffD19E9E,
+                                ).withValues(alpha: 0.95),
+                                content: Text(
+                                  'Are you sure you want to log out?',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 24.0,
+                                    color: const Color(0xff6C2C2C),
                                   ),
-                                  onPressed: () {
-                                    CacheHelper.removeData(key: 'orgId').then((value){
-                                      navigateAndFinish(context, const SelectScreen());
-                                      cubit.currentIndex = 0;
-                                    });
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('yes'),
                                 ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: const Color(0xffAF6B58),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(5.0),
+                                actions: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: const Color(0xffB8BB84),
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                      ),
                                     ),
+                                    onPressed: () {
+                                      CacheHelper.removeData(key: 'orgId').then((
+                                        value,
+                                      ) {
+                                        navigateAndFinish(
+                                          context,
+                                          const SelectScreen(),
+                                        );
+                                        cubit.currentIndex = 0;
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('yes'),
                                   ),
-                                  child: const Text('cancel'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: const Row(
-                        spacing: 10.0,
-                        children: [
-                          Icon(Icons.logout, color: Colors.black),
-                          Text(
-                            'Logout',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffC79E9E),
-                            ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: const Color(0xffAF6B58),
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0),
+                                      ),
+                                    ),
+                                    child: const Text('cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.logout, color: Colors.black),
+                        label: const Text(
+                          'Logout',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff6C2C2C),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

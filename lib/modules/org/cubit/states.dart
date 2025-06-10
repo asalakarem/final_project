@@ -74,6 +74,10 @@ class MainGetOrgDataErrorState extends OrgStates {
 
 class OrgGetRequestLoadingState extends OrgStates {}
 
+class OrgGetAcceptLoadingState extends OrgStates {}
+
+class OrgGetMissionDoneLoadingState extends OrgStates {}
+
 class OrgGetRequestSuccessState extends OrgStates {}
 
 class OrgGetRequestErrorState extends OrgStates {

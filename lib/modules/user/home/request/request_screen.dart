@@ -105,6 +105,7 @@ class RequestScreen extends StatelessWidget {
                       ),
                       child: TextFormField(
                         controller: addressController,
+                        readOnly: true,
                         onTap: () {
                           navigateTo(
                             context,

@@ -58,7 +58,7 @@ class BlockScreen extends StatelessWidget {
                   navigateAndFinish(context, const SelectScreen());
                 });
               },
-              child: const Text('Continue', style: TextStyle(fontSize: 16.0)),
+              child: const Text('Logout', style: TextStyle(fontSize: 16.0)),
             ),
           ],
         ),
